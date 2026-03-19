@@ -59,10 +59,15 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
-// Safely get numeric price
+// 🔹 Universal getPrice function - handles spaces and case differences
 function getPrice(item){
-  let precio = item["Precio"] || item["Precio "] || item["precio"] || 0;
-  precio = parseFloat(precio);
+  let precio = 0;
+  for(let k of Object.keys(item)){
+    if(k.trim().toLowerCase() === "precio"){
+      precio = parseFloat(item[k]);
+      break;
+    }
+  }
   if(isNaN(precio)) precio = 0;
   return precio;
 }
