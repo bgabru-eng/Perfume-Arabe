@@ -59,7 +59,7 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
-// Function to safely get numeric price
+// 🔹 Safely get numeric price
 function getPrice(item){
   let precio = item["Precio"] || item["Precio "] || item["precio"] || 0;
   precio = parseFloat(precio);
@@ -126,7 +126,7 @@ function renderCart(){
       msg += `${i+1}. ${item.nombre} - $${precioNum}%0A`;
     });
     msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
-    checkoutBtn.href = `https://wa.me/5214151234567?text=${msg}`;
+    checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
   }else{
     checkoutBtn.href="#";
   }
