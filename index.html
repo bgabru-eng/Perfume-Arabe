@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Perfume Store</title>
+</head>
 
+<body style="background:black; color:white; font-family:sans-serif;">
+
+<h1 style="text-align:center;">Luxury Perfumes</h1>
+
+<!-- 👇 ये जरूरी है -->
+<div id="products"></div>
+
+<script>
+const sheetID = "1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8";
+const sheetName = "Perfumes";
+const url = `https://opensheet.elk.sh/${sheetID}/${sheetName}`;
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    let output = "";
+
+    data.forEach(item => {
+      output += `
+        <div style="border:1px solid gold; margin:10px; padding:10px;">
+          <img src="${item.Imagen}" width="200"><br>
+          <h2>${item.Nombre}</h2>
+          <p>Price: ${item.Precio}</p>
+          <a href="https://wa.me/521XXXXXXXXXX" style="background:gold;color:black;padding:5px;display:inline-block;margin-top:5px;">Buy</a>
+        </div>
+      `;
+    });
+
+    document.getElementById("products").innerHTML = output;
+  })
+  .catch(error => {
+    document.getElementById("products").innerHTML = "Error loading data ❌";
+    console.log(error);
+  });
+</script>
+
+</body>
+</html>
