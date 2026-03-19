@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Perfumes de Lujo</title>
+</head>
+
+<body style="background:black; color:white; font-family:sans-serif;">
+
+<h1 style="text-align:center;">Perfumes de Lujo</h1>
+
+<div id="products"></div>
+
 <script>
 const sheetID = "1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8";
 const sheetName = "Perfumes";
@@ -10,18 +22,20 @@ fetch(url)
 
     data.forEach(item => {
 
-      let name = item.Nombre || "No Name";
-      let price = item.Precio || "No Price";
-      let img = item.Imagen || "";
-      
+      // 🔥 SAFE VALUES (undefined fix)
+      let nombre = item["Nombre"] ? item["Nombre"] : "Perfume";
+      let precio = item["Precio"] ? item["Precio"] : "Consultar";
+      let imagen = item["Imagen"] ? item["Imagen"] : "";
+
       output += `
-        <div style="border:1px solid gold; margin:10px; padding:10px;">
-          <img src="${img}" width="200"><br>
-          <h2>${name}</h2>
-          <p>Price: ${price}</p>
-          <a href="https://wa.me/524613247039?text=I want this perfume: ${name}" 
-             style="background:gold;color:black;padding:8px;display:inline-block;margin-top:5px;text-decoration:none;">
-             Buy on WhatsApp
+        <div style="border:1px solid gold; margin:15px; padding:15px; text-align:center;">
+          <img src="${imagen}" width="200"><br><br>
+          <h2>${nombre}</h2>
+          <p>Precio: ${precio}</p>
+          
+          <a href="https://wa.me/5214613247039?text=Hola quiero comprar: ${nombre}" 
+             style="background:gold;color:black;padding:10px;text-decoration:none;display:inline-block;margin-top:10px;">
+             Comprar por WhatsApp
           </a>
         </div>
       `;
@@ -29,8 +43,11 @@ fetch(url)
 
     document.getElementById("products").innerHTML = output;
   })
-  .catch(err => {
-    document.getElementById("products").innerHTML = "Error ❌";
-    console.log(err);
+  .catch(error => {
+    document.getElementById("products").innerHTML = "Error al cargar ❌";
+    console.log(error);
   });
 </script>
+
+</body>
+</html>
