@@ -34,18 +34,24 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 
 /* Cart */
 #cart-toggle { 
-  position:fixed; bottom:20px; right:20px; 
+  position:fixed; 
+  bottom:20px; 
+  right:20px; 
   background:#1E90FF; /* bright blue */
   color:white; 
-  padding:12px; 
+  padding:20px 22px; /* big button */
+  font-size:24px;       /* bigger icon/text */
   border-radius:50%; 
   font-weight:bold; 
   cursor:pointer; 
   z-index:1001; 
-  box-shadow:0 0 15px #1E90FF; 
+  box-shadow:0 0 20px #1E90FF; 
   transition:0.3s; 
 }
-#cart-toggle:hover { transform:scale(1.1); }
+#cart-toggle:hover { 
+  transform:scale(1.15); 
+  box-shadow:0 0 25px #1E90FF; 
+}
 
 #cart { position:fixed; top:10px; right:-350px; width:300px; max-height:80vh; overflow-y:auto; background:#111; border:2px solid gold; padding:10px; border-radius:10px; z-index:1000; transition:0.5s; }
 #cart.open { right:10px; }
