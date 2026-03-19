@@ -1,1 +1,30 @@
+<script>
+const sheetID = "1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8";
+const url = `https://opensheet.elk.sh/${sheetID}/Perfumes`;
 
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+    let output = "";
+
+    data.forEach(item => {
+      output += `
+        <div style="border:1px solid gold; margin:10px; padding:10px; color:white;">
+          <img src="${item.Imagen}" width="200"><br>
+          <h2>${item.Nombre}</h2>
+          <p>💰 ${item.Precio}</p>
+          <a href="https://wa.me/52XXXXXXXXXX?text=I%20want%20this%20perfume" 
+             style="background:gold;color:black;padding:8px;display:inline-block;margin-top:10px;">
+             Buy on WhatsApp
+          </a>
+        </div>
+      `;
+    });
+
+    document.getElementById("products").innerHTML = output;
+  })
+  .catch(error => {
+    document.getElementById("products").innerHTML = "Error loading data 😢";
+    console.log(error);
+  });
+</script>
