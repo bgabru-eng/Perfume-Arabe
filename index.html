@@ -1,91 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Perfume Store</title>
-
-<style>
-body {
-font-family: Arial;
-background: #111;
-color: white;
-text-align: center;
-}
-
-.products {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-}
-
-.card {
-background: #222;
-margin: 10px;
-padding: 15px;
-border-radius: 10px;
-width: 200px;
-}
-
-img {
-width: 100%;
-border-radius: 10px;
-}
-
-button {
-background: gold;
-border: none;
-padding: 10px;
-cursor: pointer;
-}
-</style>
-
+<title>Luxury Perfumes</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>Premium Perfumes</h1>
+<h1 class="brand">Luxury Perfumes</h1>
 
-<div class="products" id="products"></div>
+<div class="products">
 
-<script>
+  <div class="card">
+    <img src="images/perfume1.jpg">
+    <h2>Perfume 1</h2>
+    <p>$500 MXN</p>
+    <a href="https://wa.me/YOURNUMBER">Buy on WhatsApp</a>
+  </div>
 
-// 🔥 तुम्हारा Google Sheet CSV link
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSLO4uZBbBt3BC2ukZH6WPEnh1Taw_JEQSUAg7lVF2tmXgGH1Hb19ggbFTvTVGem2yO480fc5yEJWRR/pub?output=csv";
+  <div class="card">
+    <img src="images/perfume2.jpg">
+    <h2>Perfume 2</h2>
+    <p>$600 MXN</p>
+    <a href="https://wa.me/+524613247039">Buy on WhatsApp</a>
+  </div>
 
-fetch(sheetURL)
-.then(response => response.text())
-.then(data => {
-    
-    const rows = data.split("\n").slice(1); // header skip
-    const container = document.getElementById("products");
-
-    rows.forEach(row => {
-        const cols = row.split(",");
-
-        const name = cols[0];
-        const price = cols[1];
-        const desc = cols[2];
-        const image = cols[3];
-
-        const card = `
-        <div class="card">
-            <img src="${image}">
-            <h2>${name}</h2>
-            <p>${price} MXN</p>
-            <button onclick="order('${name}')">Order on WhatsApp</button>
-        </div>
-        `;
-
-        container.innerHTML += card;
-    });
-
-});
-
-function order(product) {
-    window.open(`https://wa.me/524613247039?text=I want to buy ${product}`);
-}
-
-</script>
+</div>
 
 </body>
 </html>
