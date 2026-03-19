@@ -59,16 +59,12 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
-// 🔹 Universal getPrice function - handles spaces and case differences
+// Universal getPrice function - trims spaces and handles invalid cells
 function getPrice(item){
-  let precio = 0;
-  for(let k of Object.keys(item)){
-    if(k.trim().toLowerCase() === "precio"){
-      precio = parseFloat(item[k]);
-      break;
-    }
-  }
-  if(isNaN(precio)) precio = 0;
+  let precio = item["Precio"] || item["Precio "] || item["precio"] || "0";
+  if(typeof precio === "string") precio = precio.trim(); // extra spaces हटाओ
+  precio = parseFloat(precio);
+  if(isNaN(precio) || precio <= 0) precio = 0; // 0 fallback
   return precio;
 }
 
