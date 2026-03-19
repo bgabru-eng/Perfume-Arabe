@@ -1,1 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Perfumes de Lujo - Categorías</title>
+<style>
+body { background:black; color:white; font-family:sans-serif; margin:0; padding:0; }
+h1 { text-align:center; padding:20px; }
+#categories { text-align:center; margin-bottom:20px; }
+.category-btn { padding:10px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:gold; color:black; font-weight:bold; }
+#search { width:90%; padding:10px; margin:0 auto 20px auto; display:block; border-radius:5px; border:none; font-size:16px; }
+#products { display:flex; flex-wrap:wrap; justify-content:center; }
+.product { border:1px solid gold; margin:10px; padding:15px; text-align:center; width:220px; border-radius:10px; background:#111; }
+.product img { width:200px; height:auto; border-radius:5px; }
+button { background:gold; color:black; padding:8px 10px; border:none; cursor:pointer; margin-top:5px; border-radius:5px; }
+#cart { position:fixed; top:10px; right:10px; width:250px; max-height:80vh; overflow-y:auto; background:#222; border:1px solid gold; padding:10px; border-radius:10px; }
+#cart h3 { text-align:center; margin-top:0; }
+#cart-items p { margin:5px 0; }
+#checkout { width:100%; margin-top:10px; }
+</style>
+</head>
+<body>
 
+<h1>Perfumes de Lujo</h1>
+
+<div id="categories">
+  <button class="category-btn" onclick="filterCategory('Dama')">Dama</button>
+  <button class="category-btn" onclick="filterCategory('Caballero')">Caballero</button>
+  <button class="category-btn" onclick="filterCategory('Unisex')">Unisex</button>
+  <button class="category-btn" onclick="filterCategory('All')">Todos</button>
+</div>
+
+<input type="text" id="search" placeholder="Buscar perfume...">
+
+<div id="products"></div>
+
+<div id="cart">
+  <h3>Carrito</h3>
+  <div id="cart-items"></div>
+  <p><strong>Envío:</strong> $200</p>
+  <p><strong>Total: $<span id="total">0</span></strong></p>
+  <p id="total-letras"></p>
+  <a id="checkout" href="#" target="_blank"><button>Comprar en WhatsApp</button></a>
+</div>
+
+<script>
+// Convert number to words (simple, up to 9999)
+function numeroALetras(num){
+    const unidades = ['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
+    const decenas = ['','diez','veinte','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa'];
+    if(num<=9) return unidades[num];
+    if(num<=99) return decenas[Math.floor(num/10)] + (num%10>0 ? ' y ' + unidades[num%10]:'');
+    return num; // fallback for higher numbers
+}
+
+const sheetURL = "https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
+let productsData = [];
+let filteredData = [];
+let cart = [];
+const shipping = 200;
+
+// Render products
+function renderProducts(data){
+  const productsDiv = document.getElementById("products");
+  productsDiv.innerHTML = "";
+  data.forEach(item=>{
+    let nombre = item["Nombre"] || item["Nombre "] || "Perfume";
+    let precioStr = (item["Precio"] || item["Precio "] || "0").replace(/[^0-9.]/g,"");
+    let precio = parseFloat(precioStr)||0;
+    let imagen = item["Imagen"] || item["Imagen "] || "";
+    let descripcion = item["Descripcion"] || item["Descripcion "] || "Sin descripción";
+    let categoria = item["Categoria"] || item["Categoria "] || "Unisex";
+
+    const productDiv = document.createElement("div");
+    productDiv.className = "product";
+    productDiv.innerHTML = `
+      <img src="${imagen}" onerror="this.src='https://via.placeholder.com/200'">
+      <h2>${nombre}</h2>
+      <p><strong>Precio:</strong> $${precio}</p>
+      <p><strong>Descripción:</strong> ${descripcion}</p>
+      <p><strong>Categoria:</strong> ${categoria}</p>
+      <button onclick="addToCart('${nombre}', ${precio})">Agregar al carrito</button>
+    `;
+    productsDiv.appendChild(productDiv);
+  });
+}
+
+// Cart functions
+function addToCart(nombre, precio){
+  cart.push({nombre, precio});
+  renderCart();
+}
+
+function renderCart(){
+  const cartItemsDiv = document.getElementById("cart-items");
+  cartItemsDiv.innerHTML = "";
+  let subtotal = 0;
+  cart.forEach((item)=>{
+    subtotal += item.precio;
+    const p = document.createElement("p");
+    p.textContent = `${item.nombre} - $${item.precio}`;
+    cartItemsDiv.appendChild(p);
+  });
+  let total = subtotal + shipping;
+  document.getElementById("total").textContent = total.toFixed(2);
+  document.getElementById("total-letras").textContent = `Total en letras: ${numeroALetras(total)} pesos`;
+
+  // WhatsApp checkout
+  const checkoutBtn = document.getElementById("checkout");
+  if(cart.length>0){
+    let msg = "Hola,%20quiero%20comprar%20estos%20perfumes:%0A";
+    cart.forEach((item,i)=>{
+      msg += `${i+1}. ${item.nombre} - $${item.precio}%0A`;
+    });
+    msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
+    checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
+  }else{
+    checkoutBtn.href="#";
+  }
+}
+
+// Category filter
+function filterCategory(cat){
+  if(cat==="All"){
+    filteredData = productsData;
+  }else{
+    filteredData = productsData.filter(p=>{
+      let categoria = p["Categoria"] || p["Categoria "] || "Unisex";
+      return categoria.toLowerCase() === cat.toLowerCase();
+    });
+  }
+  renderProducts(filteredData);
+}
+
+// Search bar
+document.getElementById("search").addEventListener("input", function(e){
+  let searchTerm = e.target.value.toLowerCase();
+  let filtered = filteredData.filter(p=>{
+    let nombre = p["Nombre"] || p["Nombre "] || "";
+    return nombre.toLowerCase().includes(searchTerm);
+  });
+  renderProducts(filtered);
+});
+
+// Fetch products
+fetch(sheetURL)
+.then(res=>res.json())
+.then(data=>{
+  productsData = data;
+  filteredData = productsData;
+  renderProducts(productsData);
+})
+.catch(err=>{
+  console.log("ERROR FETCH:", err);
+  document.getElementById("products").innerHTML="Error cargando datos ❌";
+});
+</script>
+</body>
+</html>
