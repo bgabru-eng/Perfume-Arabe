@@ -5,8 +5,13 @@
 <title>Perfumes de Lujo - Categorías</title>
 <style>
 body { background:black; color:white; font-family:sans-serif; margin:0; padding:0; }
-h1 { text-align:center; padding:20px; }
-#categories { text-align:center; margin-bottom:20px; }
+header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#111; }
+header h1 { margin:0; font-size:24px; }
+.instagram-btn-header {
+  background:#E1306C; color:white; padding:8px 15px; border-radius:5px; font-weight:bold; text-decoration:none;
+}
+.instagram-btn-header:hover { background:#C13584; }
+#categories { text-align:center; margin:20px 0; }
 .category-btn { padding:10px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:gold; color:black; font-weight:bold; }
 #search { width:90%; padding:10px; margin:0 auto 20px auto; display:block; border-radius:5px; border:none; font-size:16px; }
 #products { display:flex; flex-wrap:wrap; justify-content:center; }
@@ -20,22 +25,14 @@ button { background:gold; color:black; padding:8px 10px; border:none; cursor:poi
 .remove-btn { background:red; color:white; border:none; border-radius:3px; padding:2px 5px; cursor:pointer; margin-left:5px; }
 #checkout { width:100%; margin-top:10px; }
 #footer { text-align:center; padding:15px; margin-top:20px; }
-.instagram-btn {
-  display:inline-block;
-  background:#E1306C; /* Instagram pink */
-  color:white;
-  padding:8px 15px;
-  border-radius:5px;
-  font-weight:bold;
-  text-decoration:none;
-  margin-top:10px;
-}
-.instagram-btn:hover { background:#C13584; }
 </style>
 </head>
 <body>
 
-<h1>Perfumes de Lujo</h1>
+<header>
+  <h1>Perfumes de Lujo</h1>
+  <a href="https://www.instagram.com/indiaenmexico?igsh=MWNjNTYybG9uOXdpaA==" target="_blank" class="instagram-btn-header">Instagram</a>
+</header>
 
 <div id="categories">
   <button class="category-btn" onclick="filterCategory('Dama')">Dama</button>
@@ -57,10 +54,6 @@ button { background:gold; color:black; padding:8px 10px; border:none; cursor:poi
   <a id="checkout" href="#" target="_blank"><button>Comprar en WhatsApp</button></a>
 </div>
 
-<div id="footer">
-  Síguenos en <a href="https://www.instagram.com/your_instagram_profile" target="_blank" class="instagram-btn">Instagram</a>
-</div>
-
 <script>
 // Convert number to words (simple)
 function numeroALetras(num){
@@ -77,12 +70,11 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
-// Universal getPrice function - handles commas, spaces, and invalid cells
+// Universal getPrice function
 function getPrice(item){
   let precio = item["Precio"] || item["Precio "] || item["precio"] || "0";
   if(typeof precio === "string"){
-    precio = precio.replace(/,/g,''); // remove commas
-    precio = precio.trim(); // remove spaces
+    precio = precio.replace(/,/g,'').trim();
   }
   precio = parseFloat(precio);
   if(isNaN(precio) || precio <= 0) precio = 0;
