@@ -1,44 +1,58 @@
-<script>
-const url = "https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfumes de Lujo</title>
+</head>
+<body style="background:black; color:white; font-family:sans-serif;">
+  <h1 style="text-align:center;">Perfumes de Lujo</h1>
 
-fetch(url)
-.then(res => res.json())
-.then(data => {
+  <!-- Products container -->
+  <div id="products">Cargando productos...</div>
 
-  if (!data || data.length === 0) {
-    document.getElementById("products").innerHTML = "No hay productos ❌";
-    return;
-  }
+  <script>
+    const sheetURL = "https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
 
-  let output = "";
+    fetch(sheetURL)
+      .then(res => res.json())
+      .then(data => {
+        console.log("Data recibida:", data);
 
-  data.forEach(item => {
+        if (!data || data.length === 0) {
+          document.getElementById("products").innerHTML = "No hay productos ❌";
+          return;
+        }
 
-    console.log(item); // debug
+        let output = "";
 
-    let nombre = item["Nombre"] || item["Nombre "] || "Perfume";
-    let precio = item["Precio"] || item["Precio "] || "Consultar";
-    let imagen = item["Imagen"] || item["Imagen "] || "";
+        data.forEach(item => {
+          // Debug keys
+          console.log("Item keys:", Object.keys(item));
 
-    output += `
-      <div style="border:1px solid gold; margin:15px; padding:15px; text-align:center;">
-        <img src="${imagen}" width="200" onerror="this.src='https://via.placeholder.com/200'"><br><br>
-        <h2>${nombre}</h2>
-        <p>Precio: ${precio}</p>
+          let nombre = item["Nombre"] || item["Nombre "] || "Perfume";
+          let precio = item["Precio"] || item["Precio "] || "Consultar";
+          let imagen = item["Imagen"] || item["Imagen "] || "";
 
-        <a href="https://wa.me/524613247039?text=Hola%20quiero%20comprar%20${nombre}" 
-        style="background:gold;color:black;padding:10px;text-decoration:none;">
-        Comprar por WhatsApp
-        </a>
-      </div>
-    `;
-  });
+          output += `
+            <div style="border:1px solid gold; margin:15px; padding:15px; text-align:center;">
+              <img src="${imagen}" width="200" onerror="this.src='https://via.placeholder.com/200'"><br><br>
+              <h2>${nombre}</h2>
+              <p>Precio: ${precio}</p>
+              <a href="https://wa.me/524613247039?text=Hola%20quiero%20comprar%20${nombre}" 
+                 style="background:gold;color:black;padding:10px;text-decoration:none;">
+                 Comprar por WhatsApp
+              </a>
+            </div>
+          `;
+        });
 
-  document.getElementById("products").innerHTML = output;
+        document.getElementById("products").innerHTML = output;
 
-})
-.catch(error => {
-  document.getElementById("products").innerHTML = "Error cargando datos ❌";
-  console.log("ERROR:", error);
-});
-</script>
+      })
+      .catch(error => {
+        console.log("ERROR FETCH:", error);
+        document.getElementById("products").innerHTML = "Error cargando datos ❌";
+      });
+  </script>
+</body>
+</html>
