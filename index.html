@@ -44,13 +44,13 @@ button { background:gold; color:black; padding:8px 10px; border:none; cursor:poi
 </div>
 
 <script>
-// Convert number to words (simple, up to 9999)
+// Convert number to words (simple)
 function numeroALetras(num){
     const unidades = ['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
     const decenas = ['','diez','veinte','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa'];
     if(num<=9) return unidades[num];
     if(num<=99) return decenas[Math.floor(num/10)] + (num%10>0 ? ' y ' + unidades[num%10]:'');
-    return num; // fallback
+    return num;
 }
 
 const sheetURL = "https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
@@ -59,14 +59,21 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
+// Function to safely get numeric price
+function getPrice(item){
+  let precio = item["Precio"] || item["Precio "] || item["precio"] || 0;
+  precio = parseFloat(precio);
+  if(isNaN(precio)) precio = 0;
+  return precio;
+}
+
 // Render products
 function renderProducts(data){
   const productsDiv = document.getElementById("products");
   productsDiv.innerHTML = "";
   data.forEach(item=>{
     let nombre = item["Nombre"] || "Perfume";
-    // 🔹 Force numeric price
-    let precio = parseFloat(item["Precio"]) || 0;
+    let precio = getPrice(item);
     let imagen = item["Imagen"] || "";
     let descripcion = item["Descripcion"] || "Sin descripción";
     let categoria = item["Categoria"] || "Unisex";
@@ -79,15 +86,15 @@ function renderProducts(data){
       <p><strong>Precio:</strong> $${precio}</p>
       <p><strong>Descripción:</strong> ${descripcion}</p>
       <p><strong>Categoria:</strong> ${categoria}</p>
-      <button onclick="addToCart('${nombre}', ${precio})">Agregar al carrito</button>
+      <button onclick="addToCart('${nombre}', item)">Agregar al carrito</button>
     `;
     productsDiv.appendChild(productDiv);
   });
 }
 
 // Add to cart
-function addToCart(nombre, precio){
-  let precioNum = parseFloat(precio) || 0; // ✅ fix NaN
+function addToCart(nombre, item){
+  let precioNum = getPrice(item);
   cart.push({nombre, precio: precioNum});
   renderCart();
 }
@@ -119,7 +126,7 @@ function renderCart(){
       msg += `${i+1}. ${item.nombre} - $${precioNum}%0A`;
     });
     msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
-    checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
+    checkoutBtn.href = `https://wa.me/5214151234567?text=${msg}`;
   }else{
     checkoutBtn.href="#";
   }
