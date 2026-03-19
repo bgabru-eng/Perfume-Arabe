@@ -9,9 +9,9 @@ fetch(url)
   data.forEach(item => {
 
     // 🔥 SPACE FIX
-    let nombre = item["Nombre "] || "Perfume";
-    let precio = item["Precio "] || "Consultar";
-    let imagen = item["Imagen "] || "";
+    let nombre = item["Nombre "] || item["Nombre"] || "Perfume";
+let precio = item["Precio "] || item["Precio"] || "Consultar";
+let imagen = item["Imagen "] || item["Imagen"] || "";
 
     output += `
       <div style="border:1px solid gold; margin:15px; padding:15px; text-align:center;">
