@@ -59,7 +59,7 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
-// 🔹 Safely get numeric price
+// Safely get numeric price
 function getPrice(item){
   let precio = item["Precio"] || item["Precio "] || item["precio"] || 0;
   precio = parseFloat(precio);
