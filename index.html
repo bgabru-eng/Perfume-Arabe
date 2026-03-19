@@ -65,8 +65,10 @@ function renderProducts(data){
   productsDiv.innerHTML = "";
   data.forEach(item=>{
     let nombre = item["Nombre"] || item["Nombre "] || "Perfume";
-    let precioStr = (item["Precio"] || item["Precio "] || "0").replace(/[^0-9.]/g,"");
-    let precio = parseFloat(precioStr)||0;
+
+    // 🔹 Previous working price code restored
+    let precio = parseFloat(item["Precio"] || item["Precio "] || "0");
+
     let imagen = item["Imagen"] || item["Imagen "] || "";
     let descripcion = item["Descripcion"] || item["Descripcion "] || "Sin descripción";
     let categoria = item["Categoria"] || item["Categoria "] || "Unisex";
@@ -95,12 +97,14 @@ function renderCart(){
   const cartItemsDiv = document.getElementById("cart-items");
   cartItemsDiv.innerHTML = "";
   let subtotal = 0;
+
   cart.forEach((item)=>{
     subtotal += item.precio;
     const p = document.createElement("p");
     p.textContent = `${item.nombre} - $${item.precio}`;
     cartItemsDiv.appendChild(p);
   });
+
   let total = subtotal + shipping;
   document.getElementById("total").textContent = total.toFixed(2);
   document.getElementById("total-letras").textContent = `Total en letras: ${numeroALetras(total)} pesos`;
