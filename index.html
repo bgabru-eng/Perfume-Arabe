@@ -2,36 +2,64 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Perfumes de Lujo - Categorías</title>
+<title>Perfumes de Lujo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body { background:black; color:white; font-family:sans-serif; margin:0; padding:0; }
-header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#111; }
-header h1 { margin:0; font-size:24px; }
-.instagram-btn-header {
-  background:#E1306C; color:white; padding:8px 15px; border-radius:5px; font-weight:bold; text-decoration:none;
-}
-.instagram-btn-header:hover { background:#C13584; }
+/* Reset */
+* { box-sizing:border-box; margin:0; padding:0; }
+
+/* Body */
+body { font-family: 'Arial', sans-serif; background:#0c0c0c; color:white; }
+
+/* Header */
+header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#111; border-bottom:2px solid gold; }
+header h1 { font-size:24px; font-weight:bold; color:gold; }
+.instagram-btn-header { background:#E1306C; color:white; padding:8px 15px; border-radius:5px; font-weight:bold; text-decoration:none; transition:0.3s; }
+.instagram-btn-header:hover { background:#C13584; transform:scale(1.05); }
+
+/* Categories */
 #categories { text-align:center; margin:20px 0; }
-.category-btn { padding:10px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:gold; color:black; font-weight:bold; }
+.category-btn { padding:10px 15px; margin:5px; border:none; border-radius:5px; cursor:pointer; background:gold; color:black; font-weight:bold; transition:0.3s; }
+.category-btn:hover { background:#ffd700cc; transform:scale(1.05); }
+
+/* Search */
 #search { width:90%; padding:10px; margin:0 auto 20px auto; display:block; border-radius:5px; border:none; font-size:16px; }
-#products { display:flex; flex-wrap:wrap; justify-content:center; }
-.product { border:1px solid gold; margin:10px; padding:15px; text-align:center; width:220px; border-radius:10px; background:#111; transition: transform 0.3s, box-shadow 0.3s; }
-.product img { width:200px; height:auto; border-radius:5px; }
-.product:hover { transform: scale(1.05); box-shadow: 0 0 15px gold; }
-button { background:gold; color:black; padding:8px 10px; border:none; cursor:pointer; margin-top:5px; border-radius:5px; }
-#cart { position:fixed; top:10px; right:10px; width:300px; max-height:80vh; overflow-y:auto; background:#222; border:1px solid gold; padding:10px; border-radius:10px; }
-#cart h3 { text-align:center; margin-top:0; }
+
+/* Products grid */
+#products { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; justify-items:center; padding:0 10px; }
+.product { background:#111; border:1px solid gold; border-radius:10px; padding:15px; text-align:center; transition: transform 0.3s, box-shadow 0.3s; }
+.product img { width:200px; height:auto; border-radius:5px; transition:0.3s; }
+.product:hover { transform:scale(1.05); box-shadow:0 0 20px gold; }
+.product h2 { font-size:18px; margin:10px 0 5px 0; color:gold; }
+.product p { font-size:14px; margin:5px 0; }
+
+/* Buttons */
+button { background:gold; color:black; padding:8px 10px; border:none; cursor:pointer; margin-top:5px; border-radius:5px; font-weight:bold; transition:0.3s; }
+button:hover { background:#ffd700cc; transform:scale(1.05); }
+
+/* Cart */
+#cart { position:fixed; top:20px; right:20px; width:300px; max-height:80vh; overflow-y:auto; background:#222; border:2px solid gold; padding:10px; border-radius:10px; z-index:1000; }
+#cart h3 { text-align:center; margin-bottom:10px; color:gold; }
 #cart-items p { margin:5px 0; display:flex; justify-content: space-between; align-items: center; }
 .remove-btn { background:red; color:white; border:none; border-radius:3px; padding:2px 5px; cursor:pointer; margin-left:5px; }
-#checkout { width:100%; margin-top:10px; }
-#footer { text-align:center; padding:15px; margin-top:20px; }
+
+/* Footer */
+#footer { text-align:center; padding:15px; margin-top:40px; border-top:1px solid gold; }
+#footer a { color:gold; font-weight:bold; text-decoration:none; }
+
+/* Mobile */
+@media(max-width:600px){
+  #cart { width:90%; right:5%; }
+  #products { grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); }
+  header { flex-direction:column; gap:10px; text-align:center; }
+}
 </style>
 </head>
 <body>
 
 <header>
   <h1>Perfumes de Lujo</h1>
-  <a href="https://www.instagram.com/indiaenmexico?igsh=MWNjNTYybG9uOXdpaA==" target="_blank" class="instagram-btn-header">Instagram</a>
+  <a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram-btn-header">Instagram</a>
 </header>
 
 <div id="categories">
@@ -54,6 +82,10 @@ button { background:gold; color:black; padding:8px 10px; border:none; cursor:poi
   <a id="checkout" href="#" target="_blank"><button>Comprar en WhatsApp</button></a>
 </div>
 
+<div id="footer">
+  © 2026 Perfumes de Lujo
+</div>
+
 <script>
 // Convert number to words (simple)
 function numeroALetras(num){
@@ -70,18 +102,14 @@ let filteredData = [];
 let cart = [];
 const shipping = 200;
 
-// Universal getPrice function
 function getPrice(item){
   let precio = item["Precio"] || item["Precio "] || item["precio"] || "0";
-  if(typeof precio === "string"){
-    precio = precio.replace(/,/g,'').trim();
-  }
+  if(typeof precio === "string"){ precio = precio.replace(/,/g,'').trim(); }
   precio = parseFloat(precio);
   if(isNaN(precio) || precio <= 0) precio = 0;
   return precio;
 }
 
-// Render products
 function renderProducts(data){
   const productsDiv = document.getElementById("products");
   productsDiv.innerHTML = "";
@@ -102,32 +130,26 @@ function renderProducts(data){
       <p><strong>Categoria:</strong> ${categoria}</p>
       <button class="add-btn">Agregar al carrito</button>
     `;
-    productDiv.querySelector(".add-btn").addEventListener("click", ()=>{
-      addToCart(nombre, item);
-    });
+    productDiv.querySelector(".add-btn").addEventListener("click", ()=>{ addToCart(nombre, item); });
     productsDiv.appendChild(productDiv);
   });
 }
 
-// Add to cart
-function addToCart(nombre, item){
+function addToCart(nombre,item){
   let precioNum = getPrice(item);
   cart.push({nombre, precio: precioNum});
   renderCart();
 }
 
-// Remove from cart
 function removeFromCart(index){
   cart.splice(index,1);
   renderCart();
 }
 
-// Render cart
 function renderCart(){
   const cartItemsDiv = document.getElementById("cart-items");
   cartItemsDiv.innerHTML = "";
   let subtotal = 0;
-
   cart.forEach((item,index)=>{
     let precioNum = parseFloat(item.precio) || 0;
     subtotal += precioNum;
@@ -135,12 +157,10 @@ function renderCart(){
     p.innerHTML = `${item.nombre} - $${precioNum} <button class="remove-btn" onclick="removeFromCart(${index})">❌</button>`;
     cartItemsDiv.appendChild(p);
   });
-
   let total = subtotal + shipping;
   document.getElementById("total").textContent = total.toFixed(2);
   document.getElementById("total-letras").textContent = `Total en letras: ${numeroALetras(total)} pesos`;
 
-  // WhatsApp checkout
   const checkoutBtn = document.getElementById("checkout");
   if(cart.length>0){
     let msg = "Hola,%20quiero%20comprar%20estos%20perfumes:%0A";
@@ -150,44 +170,25 @@ function renderCart(){
     });
     msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
     checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
-  }else{
-    checkoutBtn.href="#";
-  }
+  } else { checkoutBtn.href="#"; }
 }
 
-// Category filter
 function filterCategory(cat){
-  if(cat==="All"){
-    filteredData = productsData;
-  }else{
-    filteredData = productsData.filter(p=>{
-      let categoria = p["Categoria"] || "Unisex";
-      return categoria.toLowerCase() === cat.toLowerCase();
-    });
-  }
+  if(cat==="All"){ filteredData = productsData; } 
+  else{ filteredData = productsData.filter(p=> (p["Categoria"]||"Unisex").toLowerCase()===cat.toLowerCase()); }
   renderProducts(filteredData);
 }
 
-// Search bar
-document.getElementById("search").addEventListener("input", function(e){
+document.getElementById("search").addEventListener("input",function(e){
   let searchTerm = e.target.value.toLowerCase();
-  let filtered = filteredData.filter(p=>{
-    let nombre = p["Nombre"] || "";
-    return nombre.toLowerCase().includes(searchTerm);
-  });
+  let filtered = filteredData.filter(p=> (p["Nombre"]||"").toLowerCase().includes(searchTerm));
   renderProducts(filtered);
 });
 
-// Fetch products
-fetch(sheetURL)
-.then(res=>res.json())
-.then(data=>{
-  productsData = data;
-  filteredData = productsData;
-  renderProducts(productsData);
-})
-.catch(err=>{
-  console.log("ERROR FETCH:", err);
+fetch(sheetURL).then(res=>res.json()).then(data=>{
+  productsData = data; filteredData = productsData; renderProducts(productsData);
+}).catch(err=>{
+  console.log("ERROR FETCH:",err);
   document.getElementById("products").innerHTML="Error cargando datos ❌";
 });
 </script>
