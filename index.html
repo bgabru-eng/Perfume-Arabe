@@ -6,77 +6,143 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body { font-family:Arial; background:#0c0c0c; color:white; }
-#products { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; }
-.product { background:#111; border:1px solid gold; padding:15px; text-align:center; }
-.product img { width:200px; }
-.product h2 { color:gold; }
+body {font-family:Arial; background:#0c0c0c; color:white; margin:0;}
+header {display:flex; justify-content:space-between; padding:15px; background:#111; border-bottom:2px solid gold;}
+header h1 {color:gold;}
+.header-right a, .header-right span {margin-left:10px; padding:5px 10px; border-radius:5px; font-weight:bold;}
+.instagram {background:#E1306C; color:white;}
+.direccion {background:gold; color:black; cursor:pointer;}
+
+#categories {text-align:center; margin:15px;}
+button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold; cursor:pointer;}
+
+#products {display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; padding:10px;}
+.product {background:#111; border:1px solid gold; padding:10px; text-align:center;}
+.product img {width:180px;}
+
+#cart-toggle {position:fixed; bottom:20px; right:20px; background:#00BFFF; color:white; padding:20px; border-radius:50%; font-size:26px; cursor:pointer;}
+#cart {position:fixed; right:-350px; top:10px; width:300px; background:#222; padding:10px; transition:0.5s;}
+#cart.open {right:10px;}
+
 </style>
 </head>
 
 <body>
 
-<h1 style="text-align:center;color:gold;">Perfumes</h1>
+<header>
+<h1>Perfume Árabe Original Importación</h1>
+<div class="header-right">
+<a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram">Instagram</a>
+<span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9')">📍 Dirección</span>
+</div>
+</header>
+
+<div id="categories">
+<button onclick="filterCategory('Dama')">Dama</button>
+<button onclick="filterCategory('Caballero')">Caballero</button>
+<button onclick="filterCategory('Unisex')">Unisex</button>
+<button onclick="filterCategory('All')">Todos</button>
+</div>
 
 <div id="products"></div>
 
+<div id="cart-toggle">🛒</div>
+<div id="cart">
+<h3>Carrito</h3>
+<div id="cart-items"></div>
+<p>🚚 Envío: $200 (24 horas)</p>
+<p>🔄 Sin devoluciones</p>
+<p>Total: $<span id="total">0</span></p>
+<a id="checkout" target="_blank"><button>Comprar en WhatsApp</button></a>
+</div>
+
+<div id="reviews">
+<h3>Reseñas</h3>
+<div id="reviews-list"></div>
+<input id="name" placeholder="Nombre">
+<input id="comment" placeholder="Comentario">
+<button onclick="addReview()">Enviar</button>
+</div>
+
 <script>
 
-const sheetURL = "https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
+const sheetURL="https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
+
+let productsData=[], cart=[], shipping=200;
 
 function getPrice(item){
-  let precio = item["Precio"] || "0";
-  precio = precio.toString().replace(/,/g,'').trim();
-  let num = Number(precio);
-  if(isNaN(num)) return 0;
-  return num;
+ let p=item["Precio"]||"0";
+ p=p.toString().replace(/,/g,'');
+ return Number(p)||0;
 }
 
-fetch(sheetURL)
-.then(res=>res.json())
-.then(data=>{
-  renderProducts(data);
+fetch(sheetURL).then(r=>r.json()).then(data=>{
+ productsData=data;
+ renderProducts(data);
 });
 
 function renderProducts(data){
-  const productsDiv = document.getElementById("products");
-  productsDiv.innerHTML="";
+ let html="";
+ data.forEach(item=>{
+ let nombre=item["Nombre"]||"Perfume";
+ let precio=getPrice(item);
+ let img=item["Imagen"]||"";
+ let desc=item["Descripcion"]||"";
+ let cat=item["Categoria"]||"Unisex";
+ let stock=parseInt(item["Stock"])||0;
 
-  data.forEach(item=>{
-    let nombre = item["Nombre"] || "Perfume";
-    let precio = getPrice(item);
-    let imagen = item["Imagen"] || "";
-    let stock = parseInt(item["Stock"]) || 0;
+ let stockText="Disponible",color="green";
+ if(stock==0){stockText="Agotado";color="red";}
+ else if(stock<=2){stockText="Últimas piezas "+stock;color="orange";}
 
-    let stockText = "";
-    let color = "green";
+ html+=`
+ <div class="product">
+ <img src="${img}">
+ <h2>${nombre}</h2>
+ <p>$${precio}</p>
+ <p style="color:${color};font-weight:bold;">${stockText}</p>
+ <p>${desc}</p>
+ <button onclick="addToCart('${nombre}',${precio})">Agregar</button>
+ </div>`;
+ });
+ document.getElementById("products").innerHTML=html;
+}
 
-    if(stock === 0){
-      stockText = "स्टॉक समाप्त";
-      color = "red";
-    }else if(stock <= 2){
-      stockText = "सिर्फ " + stock + " बचा";
-      color = "#FF4500";
-    }else if(stock <= 5){
-      stockText = "थोड़ा स्टॉक: " + stock;
-      color = "orange";
-    }else{
-      stockText = "स्टॉक उपलब्ध: " + stock;
-      color = "green";
-    }
+function addToCart(name,price){
+ cart.push({name,price});
+ renderCart();
+}
 
-    const div = document.createElement("div");
-    div.className="product";
+function renderCart(){
+ let html="",total=0;
+ cart.forEach((i,index)=>{
+ total+=i.price;
+ html+=`${i.name} $${i.price} <button onclick="remove(${index})">❌</button><br>`;
+ });
+ total+=shipping;
+ document.getElementById("cart-items").innerHTML=html;
+ document.getElementById("total").innerText=total;
 
-    div.innerHTML = `
-      <img src="${imagen}" onerror="this.src='https://via.placeholder.com/200'">
-      <h2>${nombre}</h2>
-      <p>Precio: ${precio}</p>
-      <p style="color:${color}; font-weight:bold;">${stockText}</p>
-    `;
+ let msg="Hola quiero comprar:%0A";
+ cart.forEach(i=>msg+=i.name+" $"+i.price+"%0A");
+ msg+="Total:"+total;
 
-    productsDiv.appendChild(div);
-  });
+ document.getElementById("checkout").href="https://wa.me/524613247039?text="+msg;
+}
+
+function remove(i){cart.splice(i,1);renderCart();}
+
+document.getElementById("cart-toggle").onclick=()=>document.getElementById("cart").classList.toggle("open");
+
+function filterCategory(cat){
+ if(cat=="All") renderProducts(productsData);
+ else renderProducts(productsData.filter(p=>p["Categoria"]==cat));
+}
+
+function addReview(){
+ let n=document.getElementById("name").value;
+ let c=document.getElementById("comment").value;
+ document.getElementById("reviews-list").innerHTML+=`<p>${n}: ${c}</p>`;
 }
 
 </script>
