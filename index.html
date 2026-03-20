@@ -267,23 +267,5 @@ document.querySelectorAll('.product').forEach(product => {
   let stockEl = product.querySelector('.stock');
 
   if (!stockEl) return;
-
-  stock = parseInt(stock);
-
-  if (stock === 0) {
-    stockEl.innerText = 'स्टॉक समाप्त';
-    stockEl.style.color = 'red';
-  } else if (stock <= 2) {
-    stockEl.innerText = 'सिर्फ ' + stock + ' बचा';
-    stockEl.style.color = '#FF4500';
-  } else if (stock <= 5) {
-    stockEl.innerText = 'थोड़ा स्टॉक: ' + stock;
-    stockEl.style.color = 'orange';
-  } else {
-    stockEl.innerText = 'स्टॉक उपलब्ध: ' + stock;
-    stockEl.style.color = 'green';
-  }
-});
-</script>
 </body>
 </html>
