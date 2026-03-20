@@ -12,11 +12,11 @@ body { font-family:'Arial', sans-serif; background:#0c0c0c; color:white; }
 header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#111; border-bottom:2px solid gold; flex-wrap:wrap; }
 header h1 { font-size:24px; font-weight:bold; color:gold; }
 .header-right { display:flex; align-items:center; gap:15px; flex-wrap:wrap; }
-.header-right a, .header-right span { font-weight:bold; text-decoration:none; color:white; padding:5px 10px; border-radius:5px; transition:0.3s; }
-.header-right a.instagram-btn-header { background:#E1306C; }
+.header-right a, .header-right span { font-weight:bold; text-decoration:none; color:black; padding:5px 10px; border-radius:5px; transition:0.3s; }
+.header-right a.instagram-btn-header { background:#E1306C; color:white; }
 .header-right a.instagram-btn-header:hover { background:#C13584; transform:scale(1.05); }
-.header-right span.direccion { background:#333; color:gold; cursor:pointer; }
-.header-right span.direccion:hover { background:#444; transform:scale(1.05); }
+.header-right span.direccion { background:#FFD700; color:black; cursor:pointer; font-weight:bold; border:1px solid gold; }
+.header-right span.direccion:hover { background:#FFC300; transform:scale(1.05); }
 
 /* Categories */
 #categories { text-align:center; margin:20px 0; }
@@ -60,7 +60,11 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 #cart.open { right:15px; }
 #cart h3 { text-align:center; margin-bottom:10px; color:gold; }
 #cart-items p { margin:5px 0; display:flex; justify-content: space-between; align-items: center; }
+#cart-items p span { color:gold; }
 .remove-btn { background:#ff4444; color:white; border:none; border-radius:3px; padding:2px 5px; cursor:pointer; margin-left:5px; }
+
+/* Cart info highlight */
+#cart p strong { background:#FFD700; color:black; padding:3px 5px; border-radius:3px; }
 
 /* Footer */
 #footer { text-align:center; padding:15px; margin-top:40px; border-top:1px solid gold; color:gold; font-size:14px; }
@@ -81,7 +85,7 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
   <h1>Perfumes de Lujo</h1>
   <div class="header-right">
     <a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram-btn-header">Instagram</a>
-    <span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9','_blank')">Dirección: Soriana 200, 12 de Octubre Local 22</span>
+    <span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9','_blank')">🏠 Dirección: Soriana 200, 12 de Octubre Local 22</span>
   </div>
 </header>
 
@@ -100,8 +104,8 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 <div id="cart">
   <h3>Carrito</h3>
   <div id="cart-items"></div>
-  <p><strong>Envío:</strong> $200 – disponible 24 horas</p>
-  <p><strong>Retorno:</strong> no disponible</p>
+  <p><strong>🚚 Envío:</strong> $200 – disponible 24 horas</p>
+  <p><strong>🔄 Retorno:</strong> no disponible</p>
   <p><strong>Total: $<span id="total">0</span></strong></p>
   <p id="total-letras"></p>
   <a id="checkout" href="#" target="_blank"><button>Comprar en WhatsApp</button></a>
