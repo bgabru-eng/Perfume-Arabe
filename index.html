@@ -7,8 +7,10 @@
 
 <style>
 body {font-family:Arial; background:#0c0c0c; color:white; margin:0;}
+
 header {display:flex; justify-content:space-between; padding:15px; background:#111; border-bottom:2px solid gold;}
 header h1 {color:gold;}
+
 .header-right a, .header-right span {margin-left:10px; padding:5px 10px; border-radius:5px; font-weight:bold;}
 .instagram {background:#E1306C; color:white;}
 .direccion {background:gold; color:black; cursor:pointer;}
@@ -23,6 +25,10 @@ button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold
 #cart-toggle {position:fixed; bottom:20px; right:20px; background:#00BFFF; color:white; padding:20px; border-radius:50%; font-size:26px; cursor:pointer;}
 #cart {position:fixed; right:-350px; top:10px; width:300px; background:#222; padding:10px; transition:0.5s;}
 #cart.open {right:10px;}
+#cart-close {background:red;color:white;border:none;padding:5px;cursor:pointer;}
+
+#reviews {padding:10px;}
+.review {border-bottom:1px solid gold; margin:5px 0;}
 
 </style>
 </head>
@@ -33,7 +39,9 @@ button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold
 <h1>Perfume Árabe Original Importación</h1>
 <div class="header-right">
 <a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram">Instagram</a>
-<span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9')">📍 Dirección</span>
+<span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9')">
+📍 Avenida 12 de Octubre, Local 22
+</span>
 </div>
 </header>
 
@@ -46,21 +54,33 @@ button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold
 
 <div id="products"></div>
 
+<!-- CART -->
 <div id="cart-toggle">🛒</div>
+
 <div id="cart">
-<h3>Carrito</h3>
+<button id="cart-close">❌</button>
+<h3>Carrito de Compras</h3>
 <div id="cart-items"></div>
 <p>🚚 Envío: $200 (24 horas)</p>
-<p>🔄 Sin devoluciones</p>
+<p>🔄 No hay devoluciones</p>
 <p>Total: $<span id="total">0</span></p>
-<a id="checkout" target="_blank"><button>Comprar en WhatsApp</button></a>
+<a id="checkout" target="_blank"><button>Comprar por WhatsApp</button></a>
 </div>
 
+<!-- REVIEWS -->
 <div id="reviews">
-<h3>Reseñas</h3>
+<h3>Comentarios de Clientes</h3>
 <div id="reviews-list"></div>
-<input id="name" placeholder="Nombre">
-<input id="comment" placeholder="Comentario">
+
+<input id="name" placeholder="Tu nombre">
+<select id="stars">
+<option value="5">⭐⭐⭐⭐⭐</option>
+<option value="4">⭐⭐⭐⭐</option>
+<option value="3">⭐⭐⭐</option>
+<option value="2">⭐⭐</option>
+<option value="1">⭐</option>
+</select>
+<input id="comment" placeholder="Escribe tu comentario">
 <button onclick="addReview()">Enviar</button>
 </div>
 
@@ -88,12 +108,11 @@ function renderProducts(data){
  let precio=getPrice(item);
  let img=item["Imagen"]||"";
  let desc=item["Descripcion"]||"";
- let cat=item["Categoria"]||"Unisex";
  let stock=parseInt(item["Stock"])||0;
 
  let stockText="Disponible",color="green";
  if(stock==0){stockText="Agotado";color="red";}
- else if(stock<=2){stockText="Últimas piezas "+stock;color="orange";}
+ else if(stock<=2){stockText="Últimas piezas ("+stock+")";color="orange";}
 
  html+=`
  <div class="product">
@@ -102,37 +121,48 @@ function renderProducts(data){
  <p>$${precio}</p>
  <p style="color:${color};font-weight:bold;">${stockText}</p>
  <p>${desc}</p>
- <button onclick="addToCart('${nombre}',${precio})">Agregar</button>
+ <button onclick="addToCart('${nombre}',${precio},${stock})">Agregar</button>
  </div>`;
  });
  document.getElementById("products").innerHTML=html;
 }
 
-function addToCart(name,price){
+function addToCart(name,price,stock){
+ let count=cart.filter(i=>i.name===name).length;
+ if(count>=stock){
+ alert("No hay más stock disponible");
+ return;
+ }
+
  cart.push({name,price});
  renderCart();
+ document.getElementById("cart").classList.add("open");
 }
 
 function renderCart(){
  let html="",total=0;
+
  cart.forEach((i,index)=>{
  total+=i.price;
  html+=`${i.name} $${i.price} <button onclick="remove(${index})">❌</button><br>`;
  });
+
  total+=shipping;
+
  document.getElementById("cart-items").innerHTML=html;
  document.getElementById("total").innerText=total;
 
- let msg="Hola quiero comprar:%0A";
+ let msg="Hola, quiero comprar:%0A";
  cart.forEach(i=>msg+=i.name+" $"+i.price+"%0A");
- msg+="Total:"+total;
+ msg+="Total: $"+total;
 
- document.getElementById("checkout").href="https://wa.me/524613247039?text="+msg;
+ document.getElementById("checkout").href="https://wa.me/5214151234567?text="+msg;
 }
 
 function remove(i){cart.splice(i,1);renderCart();}
 
 document.getElementById("cart-toggle").onclick=()=>document.getElementById("cart").classList.toggle("open");
+document.getElementById("cart-close").onclick=()=>document.getElementById("cart").classList.remove("open");
 
 function filterCategory(cat){
  if(cat=="All") renderProducts(productsData);
@@ -142,7 +172,10 @@ function filterCategory(cat){
 function addReview(){
  let n=document.getElementById("name").value;
  let c=document.getElementById("comment").value;
- document.getElementById("reviews-list").innerHTML+=`<p>${n}: ${c}</p>`;
+ let s=document.getElementById("stars").value;
+
+ document.getElementById("reviews-list").innerHTML+=
+ `<div class="review"><b>${n}</b> ${"⭐".repeat(s)}<br>${c}</div>`;
 }
 
 </script>
