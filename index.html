@@ -35,6 +35,10 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 .review { border-bottom:1px solid gold; padding:5px 0; }
 .review:last-child { border-bottom:none; }
 
+#review-form { margin-top:15px; }
+#review-form input, #review-form textarea, #review-form select { width:100%; margin:5px 0; padding:8px; border-radius:5px; border:none; }
+#review-form button { width:100%; background:#1E90FF; color:white; font-weight:bold; }
+
 #cart-toggle { position:fixed; bottom:20px; right:20px; background:#1E90FF; color:white; padding:22px 26px; font-size:28px; border-radius:50%; font-weight:bold; cursor:pointer; z-index:1001; box-shadow:0 0 25px #1E90FF; transition:0.3s; }
 #cart-toggle:hover { transform:scale(1.2); box-shadow:0 0 30px #1E90FF; }
 
@@ -82,9 +86,19 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 
 <div id="reviews">
   <h3>Reseñas de clientes</h3>
-  <div class="review"><strong>Juan:</strong> ⭐⭐⭐⭐⭐ Excelente perfume, aroma duradero.</div>
-  <div class="review"><strong>Maria:</strong> ⭐⭐⭐⭐ Muy buena calidad y precio justo.</div>
-  <div class="review"><strong>Carlos:</strong> ⭐⭐⭐⭐⭐ Me encantó, volveré a comprar.</div>
+  <div id="reviews-list"></div>
+  <div id="review-form">
+    <input type="text" id="review-name" placeholder="Tu nombre" required>
+    <textarea id="review-comment" placeholder="Tu comentario" required></textarea>
+    <select id="review-stars">
+      <option value="5">⭐⭐⭐⭐⭐</option>
+      <option value="4">⭐⭐⭐⭐</option>
+      <option value="3">⭐⭐⭐</option>
+      <option value="2">⭐⭐</option>
+      <option value="1">⭐</option>
+    </select>
+    <button id="submit-review">Enviar Reseña</button>
+  </div>
 </div>
 
 <div id="cart-toggle">🛒</div>
@@ -104,6 +118,7 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 </div>
 
 <script>
+// Number to letters
 function numeroALetras(num){
     const unidades = ['cero','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve'];
     const decenas = ['','diez','veinte','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa'];
@@ -112,17 +127,23 @@ function numeroALetras(num){
     return num;
 }
 
+// Products
 const sheetURL = "https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
 let productsData = [];
 let filteredData = [];
 let cart = [];
 const shipping = 200;
 
+// Fetch products
+fetch(sheetURL).then(res=>res.json()).then(data=>{
+  productsData = data; filteredData = data; renderProducts(filteredData);
+}).catch(err=>console.log(err));
+
+// Render products
 function getPrice(item){
-  let precio = item["Precio"] || item["Precio "] || item["precio"] || "0";
-  if(typeof precio === "string"){ precio = precio.replace(/,/g,'').trim(); }
+  let precio = item["Precio"] || "0";
   precio = parseFloat(precio);
-  if(isNaN(precio) || precio <= 0) precio = 0;
+  if(isNaN(precio)) precio=0;
   return precio;
 }
 
@@ -133,23 +154,16 @@ function renderProducts(data){
     let nombre = item["Nombre"] || "Perfume";
     let precio = getPrice(item);
     let imagen = item["Imagen"] || "";
-    let descripcion = item["Descripcion"] || "Sin descripción";
+    let descripcion = item["Descripcion"] || "";
     let categoria = item["Categoria"] || "Unisex";
 
-    // Stock fix
+    // Stock safe fetch
     let stock = 0;
-    if(item){
-      Object.keys(item).forEach(key=>{
-        if(key.trim().toLowerCase() === "stock"){
-          let val = parseInt(item[key]);
-          if(!isNaN(val)) stock = val;
-        }
-      });
-    }
+    if(item && item["Stock"]) stock = parseInt(item["Stock"]);
 
     const productDiv = document.createElement("div");
-    productDiv.className = "product";
-    productDiv.innerHTML = `
+    productDiv.className="product";
+    productDiv.innerHTML=`
       <img src="${imagen}" onerror="this.src='https://via.placeholder.com/200'">
       <h2>${nombre}</h2>
       <p><strong>Precio:</strong> $${precio}</p>
@@ -158,14 +172,15 @@ function renderProducts(data){
       <p><strong>Categoria:</strong> ${categoria}</p>
       <button class="add-btn">Agregar al carrito</button>
     `;
-    productDiv.querySelector(".add-btn").addEventListener("click", ()=>{ addToCart(nombre, item); });
+    productDiv.querySelector(".add-btn").addEventListener("click",()=>{addToCart(nombre,item);});
     productsDiv.appendChild(productDiv);
   });
 }
 
+// Cart functions
 function addToCart(nombre,item){
   let precioNum = getPrice(item);
-  cart.push({nombre, precio: precioNum});
+  cart.push({nombre, precio:precioNum});
   renderCart();
   document.getElementById("cart").classList.add("open");
 }
@@ -177,56 +192,73 @@ function removeFromCart(index){
 
 function renderCart(){
   const cartItemsDiv = document.getElementById("cart-items");
-  cartItemsDiv.innerHTML = "";
+  cartItemsDiv.innerHTML="";
   let subtotal = 0;
   cart.forEach((item,index)=>{
-    let precioNum = parseFloat(item.precio) || 0;
-    subtotal += precioNum;
+    subtotal += item.precio;
     const p = document.createElement("p");
-    p.innerHTML = `${item.nombre} - $${precioNum} <button class="remove-btn" onclick="removeFromCart(${index})">❌</button>`;
+    p.innerHTML=`${item.nombre} - $${item.precio} <button class="remove-btn" onclick="removeFromCart(${index})">❌</button>`;
     cartItemsDiv.appendChild(p);
   });
-  let total = subtotal + shipping;
-  document.getElementById("total").textContent = total.toFixed(2);
-  document.getElementById("total-letras").textContent = `Total en letras: ${numeroALetras(total)} pesos`;
+  let total = subtotal+shipping;
+  document.getElementById("total").textContent=total.toFixed(2);
+  document.getElementById("total-letras").textContent=`Total en letras: ${numeroALetras(total)} pesos`;
 
   const checkoutBtn = document.getElementById("checkout");
   if(cart.length>0){
-    let msg = "Hola,%20quiero%20comprar%20estos%20perfumes:%0A";
-    cart.forEach((item,i)=>{
-      let precioNum = parseFloat(item.precio) || 0;
-      msg += `${i+1}. ${item.nombre} - $${precioNum}%0A`;
-    });
-    msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
-    checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
-  } else { checkoutBtn.href="#"; }
+    let msg="Hola,%20quiero%20comprar%20estos%20perfumes:%0A";
+    cart.forEach((item,i)=>{msg+=`${i+1}. ${item.nombre} - $${item.precio}%0A`;});
+    msg+=`Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
+    checkoutBtn.href=`https://wa.me/5214151234567?text=${msg}`;
+  } else checkoutBtn.href="#";
 }
 
-document.getElementById("cart-toggle").addEventListener("click",()=>{
-  document.getElementById("cart").classList.toggle("open");
-});
+// Cart toggle
+document.getElementById("cart-toggle").addEventListener("click",()=>{document.getElementById("cart").classList.toggle("open");});
+document.getElementById("cart-close").addEventListener("click",()=>{document.getElementById("cart").classList.remove("open");});
 
-document.getElementById("cart-close").addEventListener("click",()=>{
-  document.getElementById("cart").classList.remove("open");
-});
-
+// Category filter
 function filterCategory(cat){
-  if(cat==="All"){ filteredData = productsData; } 
-  else{ filteredData = productsData.filter(p=> (p["Categoria"]||"Unisex").toLowerCase()===cat.toLowerCase()); }
+  if(cat==="All") filteredData=productsData;
+  else filteredData=productsData.filter(p=>(p["Categoria"]||"Unisex").toLowerCase()===cat.toLowerCase());
   renderProducts(filteredData);
 }
 
+// Search
 document.getElementById("search").addEventListener("input",function(e){
   let searchTerm = e.target.value.toLowerCase();
-  let filtered = filteredData.filter(p=> (p["Nombre"]||"").toLowerCase().includes(searchTerm));
-  renderProducts(filtered);
+  renderProducts(filteredData.filter(p=>(p["Nombre"]||"").toLowerCase().includes(searchTerm)));
 });
 
-fetch(sheetURL).then(res=>res.json()).then(data=>{
-  productsData = data; filteredData = productsData; renderProducts(productsData);
-}).catch(err=>{
-  console.log("ERROR FETCH:",err);
-  document.getElementById("products").innerHTML="Error cargando datos ❌";
+// Reviews
+const reviewsList=document.getElementById("reviews-list");
+let reviewsData=JSON.parse(localStorage.getItem("reviews")||"[]");
+
+function renderReviews(){
+  reviewsList.innerHTML="";
+  reviewsData.forEach(r=>{
+    const div=document.createElement("div");
+    div.className="review";
+    div.innerHTML=`<strong>${r.nombre}:</strong> ${"⭐".repeat(r.estrellas)} ${r.comentario}`;
+    reviewsList.appendChild(div);
+  });
+}
+renderReviews();
+
+document.getElementById("submit-review").addEventListener("click",()=>{
+  const nombre=document.getElementById("review-name").value.trim();
+  const comentario=document.getElementById("review-comment").value.trim();
+  const estrellas=parseInt(document.getElementById("review-stars").value);
+  if(nombre && comentario){
+    const newReview={nombre,comentario,estrellas,fecha:new Date().toISOString()};
+    reviewsData.push(newReview);
+    localStorage.setItem("reviews",JSON.stringify(reviewsData));
+    renderReviews();
+    // Optional: send to Google Sheet via POST if Apps Script URL available
+    alert("Gracias por tu reseña! ✅");
+    document.getElementById("review-name").value="";
+    document.getElementById("review-comment").value="";
+  } else alert("Por favor completa todos los campos.");
 });
 </script>
 
