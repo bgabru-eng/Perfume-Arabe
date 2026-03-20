@@ -11,25 +11,69 @@ body {font-family:Arial; background:#0c0c0c; color:white; margin:0;}
 header {display:flex; justify-content:space-between; padding:15px; background:#111; border-bottom:2px solid gold;}
 header h1 {color:gold;}
 
-.header-right a, .header-right span {margin-left:10px; padding:5px 10px; border-radius:5px; font-weight:bold;}
+.header-right a, .header-right span {
+margin-left:10px; padding:6px 12px; border-radius:6px; font-weight:bold;
+}
 .instagram {background:#E1306C; color:white;}
 .direccion {background:gold; color:black; cursor:pointer;}
 
 #categories {text-align:center; margin:15px;}
 button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold; cursor:pointer;}
 
-#products {display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; padding:10px;}
-.product {background:#111; border:1px solid gold; padding:10px; text-align:center;}
+#products {
+display:grid;
+grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+padding:10px;
+}
+
+.product {
+background:#111;
+border:1px solid gold;
+padding:10px;
+text-align:center;
+border-radius:10px;
+}
+
 .product img {width:180px;}
 
-#cart-toggle {position:fixed; bottom:20px; right:20px; background:#00BFFF; color:white; padding:20px; border-radius:50%; font-size:26px; cursor:pointer;}
-#cart {position:fixed; right:-350px; top:10px; width:300px; background:#222; padding:10px; transition:0.5s;}
+#cart-toggle {
+position:fixed;
+bottom:20px;
+right:20px;
+background:#00BFFF;
+color:white;
+padding:20px;
+border-radius:50%;
+font-size:26px;
+cursor:pointer;
+}
+
+#cart {
+position:fixed;
+right:-350px;
+top:10px;
+width:300px;
+background:#222;
+padding:10px;
+transition:0.5s;
+border-left:2px solid gold;
+}
 #cart.open {right:10px;}
-#cart-close {background:red;color:white;border:none;padding:5px;cursor:pointer;}
 
-#reviews {padding:10px;}
-.review {border-bottom:1px solid gold; margin:5px 0;}
+#cart-close {
+background:red;
+color:white;
+border:none;
+padding:5px;
+cursor:pointer;
+}
 
+.review {
+border-bottom:1px solid gold;
+margin:5px 0;
+padding:5px;
+}
 </style>
 </head>
 
@@ -39,8 +83,8 @@ button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold
 <h1>Perfume Árabe Original Importación</h1>
 <div class="header-right">
 <a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram">Instagram</a>
-<span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9')">
-📍 Avenida 12 de Octubre, Local 22
+<span class="direccion" onclick="window.open('https://maps.google.com')">
+📍 Dirección: Soriana 200, 12 de Octubre Local 22, Nuevo Celaya, 38027 Celaya, Gto. México
 </span>
 </div>
 </header>
@@ -61,14 +105,18 @@ button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold
 <button id="cart-close">❌</button>
 <h3>Carrito de Compras</h3>
 <div id="cart-items"></div>
-<p>🚚 Envío: $200 (24 horas)</p>
+<p>🚚 Envío a toda la República Mexicana: $200</p>
 <p>🔄 No hay devoluciones</p>
 <p>Total: $<span id="total">0</span></p>
-<a id="checkout" target="_blank"><button>Comprar por WhatsApp</button></a>
+<a id="checkout" target="_blank">
+<button style="width:100%;background:#25D366;color:white;font-size:16px;">
+Comprar por WhatsApp
+</button>
+</a>
 </div>
 
 <!-- REVIEWS -->
-<div id="reviews">
+<div style="padding:10px;">
 <h3>Comentarios de Clientes</h3>
 <div id="reviews-list"></div>
 
@@ -90,6 +138,21 @@ const sheetURL="https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT
 
 let productsData=[], cart=[], shipping=200;
 
+// OLD REVIEWS
+let reviews=[
+{name:"Carlos",stars:5,comment:"Excelente perfume 🔥"},
+{name:"Maria",stars:4,comment:"Muy buena calidad"},
+{name:"Luis",stars:5,comment:"100% original recomendado"}
+];
+
+function loadReviews(){
+ let html="";
+ reviews.forEach(r=>{
+ html+=`<div class="review"><b>${r.name}</b> ${"⭐".repeat(r.stars)}<br>${r.comment}</div>`;
+ });
+ document.getElementById("reviews-list").innerHTML=html;
+}
+
 function getPrice(item){
  let p=item["Precio"]||"0";
  p=p.toString().replace(/,/g,'');
@@ -99,6 +162,7 @@ function getPrice(item){
 fetch(sheetURL).then(r=>r.json()).then(data=>{
  productsData=data;
  renderProducts(data);
+ loadReviews();
 });
 
 function renderProducts(data){
@@ -109,10 +173,17 @@ function renderProducts(data){
  let img=item["Imagen"]||"";
  let desc=item["Descripcion"]||"";
  let stock=parseInt(item["Stock"])||0;
+ let oferta=item["Oferta"]||"";
 
  let stockText="Disponible",color="green";
+
  if(stock==0){stockText="Agotado";color="red";}
  else if(stock<=2){stockText="Últimas piezas ("+stock+")";color="orange";}
+
+ if(oferta==="YES"){
+ stockText="🔥 Oferta Especial – Últimas piezas ("+stock+")";
+ color="red";
+ }
 
  html+=`
  <div class="product">
@@ -129,9 +200,15 @@ function renderProducts(data){
 
 function addToCart(name,price,stock){
  let count=cart.filter(i=>i.name===name).length;
+
+ if(stock===0){
+  alert("Producto agotado");
+  return;
+ }
+
  if(count>=stock){
- alert("No hay más stock disponible");
- return;
+  alert("Solo puedes comprar "+stock+" piezas");
+  return;
  }
 
  cart.push({name,price});
