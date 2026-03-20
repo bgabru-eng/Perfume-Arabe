@@ -36,6 +36,11 @@ header h1 { font-size:24px; font-weight:bold; color:gold; }
 button { background:gold; color:black; padding:8px 10px; border:none; cursor:pointer; margin-top:5px; border-radius:5px; font-weight:bold; transition:0.3s; }
 button:hover { background:#ffd700cc; transform:scale(1.05); }
 
+/* Reviews */
+#reviews { padding:15px; margin:20px; background:#111; border:1px solid gold; border-radius:10px; }
+.review { border-bottom:1px solid gold; padding:5px 0; }
+.review:last-child { border-bottom:none; }
+
 /* Cart toggle button */
 #cart-toggle { 
   position:fixed; bottom:20px; right:20px; 
@@ -65,6 +70,10 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 
 /* Cart info highlight */
 #cart p strong { background:#FFD700; color:black; padding:3px 5px; border-radius:3px; }
+
+/* Cart close button */
+#cart-close { cursor:pointer; float:right; background:#ff4444; color:white; border:none; border-radius:5px; padding:5px 10px; font-weight:bold; transition:0.3s; }
+#cart-close:hover { transform:scale(1.05); }
 
 /* Footer */
 #footer { text-align:center; padding:15px; margin-top:40px; border-top:1px solid gold; color:gold; font-size:14px; }
@@ -100,8 +109,16 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 
 <div id="products"></div>
 
+<div id="reviews">
+  <h3>Reseñas de clientes</h3>
+  <div class="review"><strong>Juan:</strong> ⭐⭐⭐⭐⭐ Excelente perfume, aroma duradero.</div>
+  <div class="review"><strong>Maria:</strong> ⭐⭐⭐⭐ Muy buena calidad y precio justo.</div>
+  <div class="review"><strong>Carlos:</strong> ⭐⭐⭐⭐⭐ Me encantó, volveré a comprar.</div>
+</div>
+
 <div id="cart-toggle">🛒</div>
 <div id="cart">
+  <button id="cart-close">Cerrar</button>
   <h3>Carrito</h3>
   <div id="cart-items"></div>
   <p><strong>🚚 Envío:</strong> $200 – disponible 24 horas</p>
@@ -201,13 +218,18 @@ function renderCart(){
       msg += `${i+1}. ${item.nombre} - $${precioNum}%0A`;
     });
     msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
-    checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
+    checkoutBtn.href = `https://wa.me/5214151234567?text=${msg}`;
   } else { checkoutBtn.href="#"; }
 }
 
 // Cart toggle
 document.getElementById("cart-toggle").addEventListener("click",()=>{
   document.getElementById("cart").classList.toggle("open");
+});
+
+// Cart close button
+document.getElementById("cart-close").addEventListener("click",()=>{
+  document.getElementById("cart").classList.remove("open");
 });
 
 function filterCategory(cat){
