@@ -135,10 +135,16 @@ function renderProducts(data){
     let imagen = item["Imagen"] || "";
     let descripcion = item["Descripcion"] || "Sin descripción";
     let categoria = item["Categoria"] || "Unisex";
+
+    // Stock fix
     let stock = 0;
-    if(item && item["Stock"]){
-      stock = parseInt(item["Stock"]);
-      if(isNaN(stock)) stock=0;
+    if(item){
+      Object.keys(item).forEach(key=>{
+        if(key.trim().toLowerCase() === "stock"){
+          let val = parseInt(item[key]);
+          if(!isNaN(val)) stock = val;
+        }
+      });
     }
 
     const productDiv = document.createElement("div");
@@ -192,7 +198,7 @@ function renderCart(){
       msg += `${i+1}. ${item.nombre} - $${precioNum}%0A`;
     });
     msg += `Subtotal: $${subtotal}%0AEnvío: $${shipping}%0ATotal: $${total.toFixed(2)}`;
-    checkoutBtn.href = `https://wa.me/5214151234567?text=${msg}`;
+    checkoutBtn.href = `https://wa.me/524613247039?text=${msg}`;
   } else { checkoutBtn.href="#"; }
 }
 
