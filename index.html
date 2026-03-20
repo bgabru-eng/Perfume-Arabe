@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Perfumes de Lujo</title>
+<title>Perfume Árabe Original Importación</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -30,7 +30,7 @@ header h1 { font-size:24px; font-weight:bold; color:gold; }
 #products { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; justify-items:center; padding:0 10px; }
 .product { background:#111; border:1px solid gold; border-radius:10px; padding:15px; text-align:center; transition: transform 0.3s, box-shadow 0.3s; }
 .product img { width:200px; height:auto; border-radius:5px; transition:0.3s; }
-.product:hover { transform:scale(1.05); box-shadow:0 0 20px gold; }
+.product:hover { transform:scale(1.05); box-shadow:0 0 25px gold; }
 .product h2 { font-size:18px; margin:10px 0 5px 0; color:gold; }
 .product p { font-size:14px; margin:5px 0; }
 button { background:gold; color:black; padding:8px 10px; border:none; cursor:pointer; margin-top:5px; border-radius:5px; font-weight:bold; transition:0.3s; }
@@ -55,10 +55,10 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 /* Cart sidebar */
 #cart { 
   position:fixed; top:10px; right:-400px; width:350px; max-height:85vh; overflow-y:auto; 
-  background:#111; border:2px solid gold; padding:15px; border-radius:10px; z-index:1000; transition:0.5s; 
+  background:linear-gradient(145deg, #1a1a1a, #333); border:2px solid gold; padding:15px; border-radius:10px; z-index:1000; box-shadow:0 0 30px gold; transition:0.5s; 
 }
 #cart.open { right:15px; }
-#cart h3 { text-align:center; margin-bottom:10px; color:gold; }
+#cart h3 { text-align:center; margin-bottom:10px; color:gold; text-shadow: 1px 1px 2px #000; }
 #cart-items p { margin:5px 0; display:flex; justify-content: space-between; align-items: center; }
 #cart-items p span { color:gold; }
 .remove-btn { background:#ff4444; color:white; border:none; border-radius:3px; padding:2px 5px; cursor:pointer; margin-left:5px; }
@@ -82,7 +82,7 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 <body>
 
 <header>
-  <h1>Perfumes de Lujo</h1>
+  <h1>Perfume Árabe Original Importación</h1>
   <div class="header-right">
     <a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram-btn-header">Instagram</a>
     <span class="direccion" onclick="window.open('https://goo.gl/maps/jQ5K1bR2xZs6K8xF9','_blank')">🏠 Dirección: Soriana 200, 12 de Octubre Local 22</span>
@@ -112,7 +112,7 @@ button:hover { background:#ffd700cc; transform:scale(1.05); }
 </div>
 
 <div id="footer">
-  <p>© 2026 Perfumes de Lujo</p>
+  <p>© 2026 Perfume Árabe Original Importación</p>
 </div>
 
 <script>
@@ -148,6 +148,7 @@ function renderProducts(data){
     let imagen = item["Imagen"] || "";
     let descripcion = item["Descripcion"] || "Sin descripción";
     let categoria = item["Categoria"] || "Unisex";
+    let stock = item["Stock"] || "0";
 
     const productDiv = document.createElement("div");
     productDiv.className = "product";
@@ -155,6 +156,7 @@ function renderProducts(data){
       <img src="${imagen}" onerror="this.src='https://via.placeholder.com/200'">
       <h2>${nombre}</h2>
       <p><strong>Precio:</strong> $${precio}</p>
+      <p><strong>Stock:</strong> ${stock} piezas disponibles</p>
       <p><strong>Descripción:</strong> ${descripcion}</p>
       <p><strong>Categoria:</strong> ${categoria}</p>
       <button class="add-btn">Agregar al carrito</button>
