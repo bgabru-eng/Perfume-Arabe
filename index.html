@@ -4,53 +4,53 @@
 <meta charset="UTF-8">
 <title>Perfume Árabe Original Importación</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
-body {font-family:Arial; background:#0c0c0c; color:white; margin:0;}
-
-header {display:flex; justify-content:space-between; padding:15px; background:#111; border-bottom:2px solid gold;}
-header h1 {color:gold;}
-
-.header-right a, .header-right span {
-margin-left:10px; padding:5px 10px; border-radius:5px; font-weight:bold;
-}
+body {font-family:Arial; background:#0c0c0c; color:white; margin:0; transition:0.3s;}
+/* HEADER */
+header {display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:15px; background:#111; border-bottom:2px solid gold;}
+header h1 {color:gold; font-size:18px; margin:5px 0;}
+.header-right {display:flex; flex-wrap:wrap; align-items:center;}
+.header-right a, .header-right span {margin:5px 5px 0 0; padding:5px 10px; border-radius:5px; font-weight:bold; text-decoration:none; transition:0.3s;}
 .instagram {background:#E1306C; color:white;}
-.direccion {background:gold; color:black; cursor:pointer;}
-
+.instagram:hover {background:#ff2d82; transform:scale(1.05);}
+.whatsapp {background:#25D366; color:white;}
+.whatsapp:hover {background:#39e174; transform:scale(1.05);}
+.direccion {background:gold; color:black; cursor:pointer; transition:0.3s;}
+.direccion:hover {opacity:0.8; transform:scale(1.02);}
+/* SEARCH */
+#search-container {text-align:center; margin:10px;}
+#search-input {padding:8px 12px; width:60%; border-radius:5px; border:none; font-size:16px;}
+#search-input:focus {outline:none; box-shadow:0 0 5px gold;}
+/* CATEGORIES */
 #categories {text-align:center; margin:15px;}
-button {padding:8px; margin:5px; border:none; border-radius:5px; background:gold; cursor:pointer;}
-
-#products {
-display:grid;
-grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-gap:15px;
-padding:10px;
-}
-.product {background:#111; border:1px solid gold; padding:10px; text-align:center;}
-.product img {width:180px;}
-
-#cart-toggle {
-position:fixed; bottom:20px; right:20px;
-background:#00BFFF; color:white;
-padding:20px; border-radius:50%;
-font-size:26px; cursor:pointer;
-}
-
-#cart {
-position:fixed; right:-350px; top:10px;
-width:300px; background:#222;
-padding:10px; transition:0.5s;
-}
+button {padding:10px 15px; margin:5px; border:none; border-radius:5px; background:linear-gradient(45deg,gold,#ffd700); cursor:pointer; font-weight:bold; transition:0.3s;}
+button:hover {background:linear-gradient(45deg,#ffd700,gold); transform:scale(1.05);}
+/* PRODUCTS */
+#products {display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; padding:10px;}
+.product {background:#111; border:1px solid gold; padding:10px; text-align:center; border-radius:8px; transition:0.3s; box-shadow:0 4px 8px rgba(255,215,0,0.3);}
+.product:hover {box-shadow:0 8px 16px rgba(255,215,0,0.5); transform:translateY(-5px);}
+.product img {width:100%; max-width:180px; border-radius:5px; transition:0.3s;}
+.product h2 {margin:10px 0; font-size:16px;}
+.product p {margin:5px 0;}
+.product button {padding:8px 12px; margin-top:8px; border:none; border-radius:5px; background:linear-gradient(45deg,#00BFFF,#1E90FF); color:white; font-weight:bold; cursor:pointer; transition:0.3s;}
+.product button:hover {background:linear-gradient(45deg,#1E90FF,#00BFFF); transform:scale(1.05);}
+/* CART */
+#cart-toggle {position:fixed; bottom:20px; right:20px; background:#00BFFF; color:white; padding:20px; border-radius:50%; font-size:26px; cursor:pointer; transition:0.3s; z-index:1000;}
+#cart-toggle:hover {transform:scale(1.1);}
+#cart {position:fixed; right:-350px; top:10px; width:300px; background:#222; padding:10px; transition:right 0.5s ease; z-index:999; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.5);}
 #cart.open {right:10px;}
-
-#cart-close {
-background:red; color:white; border:none;
-padding:5px; cursor:pointer;
-}
-
-#reviews {padding:10px;}
+#cart-close {background:red; color:white; border:none; padding:5px; cursor:pointer; width:100%; margin-bottom:10px; border-radius:5px;}
+#cart button {margin-top:5px; border-radius:5px;}
+/* REVIEWS */
+#reviews {padding:10px; margin:20px auto; max-width:900px;}
 .review {border-bottom:1px solid gold; margin:8px 0; padding-bottom:5px;}
-
+input, select {margin:5px 0; padding:5px; border-radius:5px; border:none; width:100%; transition:0.3s;}
+input:focus, select:focus {outline:none; box-shadow:0 0 5px gold;}
+/* RESPONSIVE */
+@media(max-width:600px){
+  header {flex-direction:column; align-items:flex-start;}
+  #products {grid-template-columns: repeat(auto-fit,minmax(150px,1fr));}
+}
 </style>
 </head>
 
@@ -59,14 +59,20 @@ padding:5px; cursor:pointer;
 <header>
 <h1>Perfume Árabe Original Importación</h1>
 <div class="header-right">
-<a href="https://www.instagram.com/indiaenmexico/" target="_blank" class="instagram">Instagram</a>
+<a href="https://www.instagram.com/indiaenmexico?igsh=MWNjNTYybG9uOXdpaA==" target="_blank" class="instagram">Instagram</a>
+<a href="https://wa.me/524613247039" target="_blank" class="whatsapp">WhatsApp</a>
 <span class="direccion" onclick="window.open('https://www.google.com/maps/search/?api=1&query=Soriana+200+12+de+Octubre+Local+22+Nuevo+Celaya+38027')">
 📍 Soriana 200, 12 de Octubre Local 22, Nuevo Celaya, 38027 Celaya, Gto.
 </span>
 </div>
 </header>
 
-<!-- ✅ CATEGORY ORDER FIXED -->
+<!-- SEARCH -->
+<div id="search-container">
+<input type="text" id="search-input" placeholder="Buscar productos..." onkeyup="searchProducts()">
+</div>
+
+<!-- CATEGORIES -->
 <div id="categories">
 <button onclick="filterCategory('All')">Todos</button>
 <button onclick="filterCategory('Dama')">Dama</button>
@@ -74,29 +80,26 @@ padding:5px; cursor:pointer;
 <button onclick="filterCategory('Unisex')">Unisex</button>
 </div>
 
+<!-- PRODUCTS -->
 <div id="products"></div>
 
 <!-- CART -->
 <div id="cart-toggle">🛒</div>
-
 <div id="cart">
 <button id="cart-close">❌</button>
 <h3>Carrito de Compras</h3>
 <div id="cart-items"></div>
-<p>🚚 Envío: $200 (24 horas)</p>
+<p>🚚 Envío: MX$200 (Tu pedido se envía al día hábil siguiente)</p>
 <p>🔄 No hay devoluciones</p>
-<p>Total: $<span id="total">0</span></p>
+<p>Total: <span id="total">MX$0.00</span></p>
 <a id="checkout" target="_blank">
-<button style="background:#25D366;color:white;font-weight:bold;">
-Comprar por WhatsApp
-</button>
+<button style="background:#25D366;color:white;font-weight:bold;">Comprar por WhatsApp</button>
 </a>
 </div>
 
 <!-- REVIEWS -->
 <div id="reviews">
 <h3>Opiniones de Clientes ⭐</h3>
-
 <div id="reviews-list">
 <div class="review"><b>Carlos</b> ⭐⭐⭐⭐⭐<br>Excelente perfume, dura todo el día 🔥</div>
 <div class="review"><b>Maria</b> ⭐⭐⭐⭐⭐<br>Muy buen aroma, me encantó 😍</div>
@@ -107,7 +110,6 @@ Comprar por WhatsApp
 <div class="review"><b>Diego</b> ⭐⭐⭐⭐<br>Buen producto original</div>
 <div class="review"><b>Sofia</b> ⭐⭐⭐⭐⭐<br>Me encantó, súper elegante ✨</div>
 </div>
-
 <input id="name" placeholder="Tu nombre">
 <select id="stars">
 <option value="5">⭐⭐⭐⭐⭐</option>
@@ -121,7 +123,6 @@ Comprar por WhatsApp
 </div>
 
 <script>
-
 const sheetURL="https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
 
 let productsData=[], cart=[], shipping=200;
@@ -148,47 +149,34 @@ function renderProducts(data){
 
  let stockText="",color="green";
 
- if(stock==0){
-  stockText="❌ Agotado";
-  color="red";
- }
- else if(stock<=2){
-  stockText="⚠️ Últimas piezas: "+stock;
-  color="orange";
- }
- else if(stock<=5){
-  stockText="🟡 Disponible: "+stock+" piezas";
-  color="#FFD700";
- }
- else{
-  stockText="🟢 Disponible: "+stock+" piezas";
-  color="green";
- }
+ if(stock==0){ stockText="❌ Agotado"; color="red"; }
+ else if(stock<=2){ stockText="⚠️ Últimas piezas: "+stock; color="orange"; }
+ else if(stock<=5){ stockText="🟡 Disponible: "+stock+" piezas"; color="#FFD700"; }
+ else{ stockText="🟢 Disponible: "+stock+" piezas"; color="green"; }
 
  html+=`
  <div class="product">
  <img src="${img}">
  <h2>${nombre}</h2>
- <p>$${precio}</p>
- <p style="color:${color};font-weight:bold;">${stockText}</p>
+ <p>MX$${precio.toLocaleString('es-MX', {minimumFractionDigits:2})}</p>
+ <p style="color:${color}; font-weight:bold;">${stockText}</p>
  <p>${desc}</p>
- <button onclick="addToCart('${nombre}',${precio},${stock})">
- Agregar al carrito
- </button>
- </div>`;
+ <button onclick="addToCart('${nombre}',${precio},${stock})">Agregar al carrito</button>
+ </div>`; 
  });
-
  document.getElementById("products").innerHTML=html;
+}
+
+// SEARCH FUNCTION
+function searchProducts(){
+ let term=document.getElementById("search-input").value.toLowerCase();
+ let filtered=productsData.filter(item=>item["Nombre"].toLowerCase().includes(term));
+ renderProducts(filtered);
 }
 
 function addToCart(name,price,stock){
  let count=cart.filter(i=>i.name===name).length;
-
- if(count>=stock){
-  alert("No hay más stock disponible");
-  return;
- }
-
+ if(count>=stock){ alert("No hay más stock disponible"); return; }
  cart.push({name,price});
  renderCart();
  document.getElementById("cart").classList.add("open");
@@ -196,36 +184,23 @@ function addToCart(name,price,stock){
 
 function renderCart(){
  let html="",total=0;
-
  cart.forEach((i,index)=>{
-  total+=i.price;
-  html+=`${i.name} $${i.price} 
-  <button onclick="remove(${index})">❌</button><br>`;
+   total+=i.price;
+   html+=`${i.name} MX$${i.price.toLocaleString('es-MX', {minimumFractionDigits:2})} <button onclick="remove(${index})">❌</button><br>`;
  });
-
  total+=shipping;
-
  document.getElementById("cart-items").innerHTML=html;
- document.getElementById("total").innerText=total;
-
+ document.getElementById("total").innerText="MX$"+total.toLocaleString('es-MX', {minimumFractionDigits:2});
  let msg="Hola, quiero comprar:%0A";
- cart.forEach(i=>msg+=i.name+" $"+i.price+"%0A");
- msg+="Total: $"+total;
-
- document.getElementById("checkout").href=
- "https://wa.me/524613247039?text="+msg;
+ cart.forEach(i=>msg+=i.name+" MX$"+i.price.toLocaleString('es-MX', {minimumFractionDigits:2})+"%0A");
+ msg+="Total: MX$"+total.toLocaleString('es-MX', {minimumFractionDigits:2});
+ document.getElementById("checkout").href="https://wa.me/524613247039?text="+msg;
 }
 
-function remove(i){
- cart.splice(i,1);
- renderCart();
-}
+function remove(i){ cart.splice(i,1); renderCart(); }
 
-document.getElementById("cart-toggle").onclick=
-()=>document.getElementById("cart").classList.toggle("open");
-
-document.getElementById("cart-close").onclick=
-()=>document.getElementById("cart").classList.remove("open");
+document.getElementById("cart-toggle").onclick=()=>document.getElementById("cart").classList.toggle("open");
+document.getElementById("cart-close").onclick=()=>document.getElementById("cart").classList.remove("open");
 
 function filterCategory(cat){
  if(cat=="All") renderProducts(productsData);
@@ -236,11 +211,10 @@ function addReview(){
  let n=document.getElementById("name").value;
  let c=document.getElementById("comment").value;
  let s=document.getElementById("stars").value;
-
  document.getElementById("reviews-list").innerHTML+=
  `<div class="review"><b>${n}</b> ${"⭐".repeat(s)}<br>${c}</div>`;
+ document.getElementById("name").value=""; document.getElementById("comment").value="";
 }
-
 </script>
 
 </body>
