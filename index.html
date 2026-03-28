@@ -7,7 +7,7 @@
 
 <title>Perfumes Árabes Originales en México | Inciensos de India</title>
 
-<meta name="description" content="Compra perfumes árabes originales e inciensos naturales de India en México. Larga duración, aromas intensos y envío rápido a todo el país.">
+<meta name="description" content="Compra perfumes árabes originales e inciensos naturales de India en México. Larga duración, aromas intensos y envío rápido.">
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -22,13 +22,12 @@ body {font-family:Arial; background:#0c0c0c; color:white; margin:0;}
 header {
 display:flex;
 justify-content:space-between;
-align-items:center;
 padding:15px;
 background:#111;
 border-bottom:2px solid gold;
 }
 
-header h1 {color:gold; font-size:18px;}
+header h1 {color:gold;}
 
 .header-right a {
 margin:5px;
@@ -42,20 +41,9 @@ color:white;
 .instagram {background:#E1306C;}
 .whatsapp {background:#25D366;}
 
-.hero {
-text-align:center;
-padding:25px;
-}
+.hero {text-align:center; padding:25px;}
 
-.hero h1 {font-size:24px;}
-.hero p {max-width:600px; margin:auto;}
-
-.trust {
-text-align:center;
-padding:15px;
-}
-
-.trust p {margin:5px;}
+.trust {text-align:center; padding:10px;}
 
 #products {
 display:grid;
@@ -72,10 +60,7 @@ text-align:center;
 border-radius:8px;
 }
 
-.product img {
-width:100%;
-max-width:180px;
-}
+.product img {width:100%; max-width:180px;}
 
 button {
 padding:10px;
@@ -85,8 +70,8 @@ background:#25D366;
 color:white;
 font-weight:bold;
 cursor:pointer;
+margin:5px;
 }
-
 </style>
 </head>
 
@@ -94,7 +79,6 @@ cursor:pointer;
 
 <header>
 <h1>Perfumes Árabes México</h1>
-
 <div class="header-right">
 <a href="https://www.instagram.com/indiaenmexico" target="_blank" class="instagram">Instagram</a>
 <a href="https://wa.me/524613247039" target="_blank" class="whatsapp">WhatsApp</a>
@@ -104,8 +88,7 @@ cursor:pointer;
 <!-- HERO -->
 <div class="hero">
 <h1>Perfumes Árabes Originales en México</h1>
-
-<p>Aromas intensos, larga duración y productos importados de India. Envíos a todo México.</p>
+<p>Aromas intensos, larga duración y productos importados de India.</p>
 
 <a href="https://wa.me/524613247039">
 <button>Comprar por WhatsApp</button>
@@ -114,15 +97,33 @@ cursor:pointer;
 
 <!-- TRUST -->
 <div class="trust">
-<p>✔ Perfumes árabes 100% originales</p>
+<p>✔ Perfumes 100% originales</p>
 <p>✔ Importados de India</p>
-<p>✔ Larga duración garantizada</p>
+<p>✔ Larga duración</p>
 <p>✔ Atención rápida por WhatsApp</p>
+</div>
+
+<!-- SEARCH -->
+<div style="text-align:center; margin:15px;">
+<input 
+type="text" 
+id="search-input" 
+placeholder="Buscar perfume..." 
+onkeyup="searchProducts()" 
+style="padding:10px; width:60%; border-radius:5px; border:none;">
+</div>
+
+<!-- CATEGORIES -->
+<div style="text-align:center;">
+<button onclick="filterCategory('All')">Todos</button>
+<button onclick="filterCategory('Dama')">Dama</button>
+<button onclick="filterCategory('Caballero')">Caballero</button>
+<button onclick="filterCategory('Unisex')">Unisex</button>
 </div>
 
 <!-- LOCATION -->
 <div style="text-align:center; padding:10px;">
-📍 Soriana 200, 12 de Octubre Local 22, Celaya, Guanajuato  
+📍 Soriana 200, 12 de Octubre Local 22, Celaya, Guanajuato
 </div>
 
 <!-- PRODUCTS -->
@@ -131,9 +132,16 @@ cursor:pointer;
 <script>
 const sheetURL="https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
 
+let productsData=[];
+
 fetch(sheetURL)
 .then(res=>res.json())
 .then(data=>{
+ productsData=data;
+ renderProducts(data);
+});
+
+function renderProducts(data){
  let html="";
 
  data.slice(0,15).forEach(item=>{
@@ -157,7 +165,24 @@ fetch(sheetURL)
  });
 
  document.getElementById("products").innerHTML=html;
-});
+}
+
+function searchProducts(){
+ let term=document.getElementById("search-input").value.toLowerCase();
+ let filtered=productsData.filter(item =>
+ (item["Nombre"]||"").toLowerCase().includes(term)
+ );
+ renderProducts(filtered);
+}
+
+function filterCategory(cat){
+ if(cat==="All"){
+   renderProducts(productsData);
+ } else {
+   let filtered=productsData.filter(p=>p["Categoria"]===cat);
+   renderProducts(filtered);
+ }
+}
 </script>
 
 <!-- GTM noscript -->
