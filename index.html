@@ -153,8 +153,15 @@ border-radius:8px;
 
 <div id="cart">
 <button onclick="document.getElementById('cart').classList.remove('open')">❌</button>
-<h3>Carrito</h3>
+
+<h3>Carrito de Compras</h3>
+
 <div id="cart-items"></div>
+
+<p>🚚 Envío: MX$200 (Entrega en 1-2 días hábiles)</p>
+<p>⚠️ No hay cambios ni devoluciones</p>
+
+<p><strong>Total: <span id="total">MX$0</span></strong></p>
 
 <a id="checkout" target="_blank">
 <button>Comprar por WhatsApp</button>
@@ -199,7 +206,7 @@ function renderProducts(data){
  <h3>${nombre}</h3>
  <p>${desc}</p>
  <p><strong>MX$${precio}</strong></p>
- <p style="color:${color};">${stockText}</p>
+ <p style="color:${color}; font-weight:bold;">${stockText}</p>
 
  <button onclick="addToCart('${nombre}',${precio},${stock})">
  Agregar
@@ -232,11 +239,15 @@ function renderCart(){
    html+=`${i.name} MX$${i.price} <button onclick="remove(${index})">❌</button><br>`;
  });
 
+ let finalTotal = total + 200;
+
  document.getElementById("cart-items").innerHTML=html;
+ document.getElementById("total").innerText="MX$"+finalTotal;
 
  let msg="Hola, quiero comprar:%0A";
  cart.forEach(i=>msg+=i.name+" MX$"+i.price+"%0A");
- msg+="Total: MX$"+total;
+ msg+="Envío: MX$200%0A";
+ msg+="Total: MX$"+finalTotal;
 
  document.getElementById("checkout").href="https://wa.me/524613247039?text="+msg;
 }
