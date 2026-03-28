@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Perfumes Árabes Originales en México | Inciensos de India</title>
 
 <meta name="description" content="Compra perfumes árabes originales e inciensos naturales de India en México. Larga duración, aromas intensos y envío rápido a todo el país.">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -19,22 +18,75 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <style>
 body {font-family:Arial; background:#0c0c0c; color:white; margin:0;}
-header {display:flex; flex-wrap:wrap; justify-content:space-between; padding:15px; background:#111; border-bottom:2px solid gold;}
-header h1 {color:gold; font-size:18px;}
-.header-right a {margin:5px; padding:5px 10px; border-radius:5px; font-weight:bold; text-decoration:none;}
-.instagram {background:#E1306C; color:white;}
-.whatsapp {background:#25D366; color:white;}
 
-.hero {text-align:center; padding:20px;}
+header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px;
+background:#111;
+border-bottom:2px solid gold;
+}
+
+header h1 {color:gold; font-size:18px;}
+
+.header-right a {
+margin:5px;
+padding:6px 10px;
+border-radius:5px;
+text-decoration:none;
+font-weight:bold;
+color:white;
+}
+
+.instagram {background:#E1306C;}
+.whatsapp {background:#25D366;}
+
+.hero {
+text-align:center;
+padding:25px;
+}
+
 .hero h1 {font-size:24px;}
 .hero p {max-width:600px; margin:auto;}
 
-button {padding:10px 15px; margin:5px; border:none; border-radius:5px; background:gold; font-weight:bold; cursor:pointer;}
+.trust {
+text-align:center;
+padding:15px;
+}
 
-#products {display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:15px; padding:10px;}
+.trust p {margin:5px;}
 
-.product {background:#111; border:1px solid gold; padding:10px; text-align:center;}
-.product img {width:100%; max-width:180px;}
+#products {
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+padding:10px;
+}
+
+.product {
+background:#111;
+border:1px solid gold;
+padding:10px;
+text-align:center;
+border-radius:8px;
+}
+
+.product img {
+width:100%;
+max-width:180px;
+}
+
+button {
+padding:10px;
+border:none;
+border-radius:5px;
+background:#25D366;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
 </style>
 </head>
 
@@ -42,21 +94,35 @@ button {padding:10px 15px; margin:5px; border:none; border-radius:5px; backgroun
 
 <header>
 <h1>Perfumes Árabes México</h1>
+
 <div class="header-right">
 <a href="https://www.instagram.com/indiaenmexico" target="_blank" class="instagram">Instagram</a>
 <a href="https://wa.me/524613247039" target="_blank" class="whatsapp">WhatsApp</a>
 </div>
 </header>
 
-<!-- HERO SECTION -->
+<!-- HERO -->
 <div class="hero">
-<h1>Perfumes Árabes e Inciensos de India en México</h1>
+<h1>Perfumes Árabes Originales en México</h1>
 
-<p>Descubre perfumes árabes originales de larga duración e inciensos naturales importados de India. Aromas intensos y únicos con envío a todo México.</p>
+<p>Aromas intensos, larga duración y productos importados de India. Envíos a todo México.</p>
 
 <a href="https://wa.me/524613247039">
 <button>Comprar por WhatsApp</button>
 </a>
+</div>
+
+<!-- TRUST -->
+<div class="trust">
+<p>✔ Perfumes árabes 100% originales</p>
+<p>✔ Importados de India</p>
+<p>✔ Larga duración garantizada</p>
+<p>✔ Atención rápida por WhatsApp</p>
+</div>
+
+<!-- LOCATION -->
+<div style="text-align:center; padding:10px;">
+📍 Soriana 200, 12 de Octubre Local 22, Celaya, Guanajuato  
 </div>
 
 <!-- PRODUCTS -->
@@ -65,9 +131,12 @@ button {padding:10px 15px; margin:5px; border:none; border-radius:5px; backgroun
 <script>
 const sheetURL="https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
 
-fetch(sheetURL).then(r=>r.json()).then(data=>{
+fetch(sheetURL)
+.then(res=>res.json())
+.then(data=>{
  let html="";
- data.forEach(item=>{
+
+ data.slice(0,15).forEach(item=>{
  let nombre=item["Nombre"]||"Perfume";
  let precio=item["Precio"]||"0";
  let img=item["Imagen"]||"";
@@ -76,18 +145,26 @@ fetch(sheetURL).then(r=>r.json()).then(data=>{
  html+=`
  <div class="product">
  <img src="${img}">
- <h2>${nombre}</h2>
+ <h3>${nombre}</h3>
  <p>${desc}</p>
  <p><strong>MX$${precio}</strong></p>
- <a href="https://wa.me/524613247039?text=Hola,%20quiero%20${nombre}">
+
+ <a href="https://wa.me/524613247039?text=Hola,%20quiero%20${encodeURIComponent(nombre)}">
  <button>Comprar por WhatsApp</button>
  </a>
- </div>`;
+ </div>
+ `;
  });
 
  document.getElementById("products").innerHTML=html;
 });
 </script>
+
+<!-- GTM noscript -->
+<noscript>
+<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MW796FBX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
 
 </body>
 </html>
