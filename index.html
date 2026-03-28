@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Perfumes Árabes Originales en México | Inciensos de India</title>
-
 <meta name="description" content="Compra perfumes árabes originales e inciensos naturales de India en México. Larga duración, aromas intensos y envío rápido.">
 
 <!-- Google Tag Manager -->
@@ -42,7 +41,6 @@ color:white;
 .whatsapp {background:#25D366;}
 
 .hero {text-align:center; padding:25px;}
-
 .trust {text-align:center; padding:10px;}
 
 #products {
@@ -72,7 +70,33 @@ font-weight:bold;
 cursor:pointer;
 margin:5px;
 }
+
+/* CART */
+#cart-toggle {
+position:fixed;
+bottom:20px;
+right:20px;
+background:#25D366;
+padding:18px;
+border-radius:50%;
+font-size:22px;
+cursor:pointer;
+}
+
+#cart {
+position:fixed;
+right:-350px;
+top:10px;
+width:300px;
+background:#222;
+padding:10px;
+transition:0.4s;
+border-radius:8px;
+}
+
+#cart.open {right:10px;}
 </style>
+
 </head>
 
 <body>
@@ -105,12 +129,7 @@ margin:5px;
 
 <!-- SEARCH -->
 <div style="text-align:center; margin:15px;">
-<input 
-type="text" 
-id="search-input" 
-placeholder="Buscar perfume..." 
-onkeyup="searchProducts()" 
-style="padding:10px; width:60%; border-radius:5px; border:none;">
+<input type="text" id="search-input" placeholder="Buscar perfume..." onkeyup="searchProducts()" style="padding:10px; width:60%;">
 </div>
 
 <!-- CATEGORIES -->
@@ -123,19 +142,36 @@ style="padding:10px; width:60%; border-radius:5px; border:none;">
 
 <!-- LOCATION -->
 <div style="text-align:center; padding:10px;">
-📍 Soriana 200, 12 de Octubre Local 22, Celaya, Guanajuato, Mexico
+📍 Soriana 200, Celaya, Guanajuato
 </div>
 
 <!-- PRODUCTS -->
 <div id="products"></div>
 
+<!-- CART -->
+<div id="cart-toggle">🛒</div>
+
+<div id="cart">
+<button onclick="document.getElementById('cart').classList.remove('open')">❌</button>
+<h3>Carrito</h3>
+<div id="cart-items"></div>
+
+<a id="checkout" target="_blank">
+<button>Comprar por WhatsApp</button>
+</a>
+</div>
+
 <script>
 const sheetURL="https://opensheet.elk.sh/1jTuw2fhX_7hVQvp8EsPFIo4b37si6xdqGKDTDT1ZSW8/Perfumes";
 
-let productsData=[];
+let productsData=[], cart=[];
+
+function getPrice(p){
+ return Number((p||"0").toString().replace(/,/g,''))||0;
+}
 
 fetch(sheetURL)
-.then(res=>res.json())
+.then(r=>r.json())
 .then(data=>{
  productsData=data;
  renderProducts(data);
@@ -146,9 +182,16 @@ function renderProducts(data){
 
  data.slice(0,15).forEach(item=>{
  let nombre=item["Nombre"]||"Perfume";
- let precio=item["Precio"]||"0";
+ let precio=getPrice(item["Precio"]);
  let img=item["Imagen"]||"";
  let desc=item["Descripcion"]||"";
+ let stock=parseInt(item["Stock"])||0;
+
+ let stockText="",color="green";
+
+ if(stock==0){ stockText="❌ Agotado"; color="red"; }
+ else if(stock<=2){ stockText="⚠️ Últimas piezas: "+stock; color="orange"; }
+ else{ stockText="🟢 Disponible: "+stock; color="green"; }
 
  html+=`
  <div class="product">
@@ -156,16 +199,56 @@ function renderProducts(data){
  <h3>${nombre}</h3>
  <p>${desc}</p>
  <p><strong>MX$${precio}</strong></p>
+ <p style="color:${color};">${stockText}</p>
 
- <a href="https://wa.me/524613247039?text=Hola,%20quiero%20${encodeURIComponent(nombre)}">
- <button>Comprar por WhatsApp</button>
- </a>
+ <button onclick="addToCart('${nombre}',${precio},${stock})">
+ Agregar
+ </button>
  </div>
  `;
  });
 
  document.getElementById("products").innerHTML=html;
 }
+
+function addToCart(name,price,stock){
+ let count=cart.filter(i=>i.name===name).length;
+
+ if(count>=stock){
+   alert("No hay más stock disponible");
+   return;
+ }
+
+ cart.push({name,price});
+ renderCart();
+ document.getElementById("cart").classList.add("open");
+}
+
+function renderCart(){
+ let html="", total=0;
+
+ cart.forEach((i,index)=>{
+   total+=i.price;
+   html+=`${i.name} MX$${i.price} <button onclick="remove(${index})">❌</button><br>`;
+ });
+
+ document.getElementById("cart-items").innerHTML=html;
+
+ let msg="Hola, quiero comprar:%0A";
+ cart.forEach(i=>msg+=i.name+" MX$"+i.price+"%0A");
+ msg+="Total: MX$"+total;
+
+ document.getElementById("checkout").href="https://wa.me/524613247039?text="+msg;
+}
+
+function remove(i){
+ cart.splice(i,1);
+ renderCart();
+}
+
+document.getElementById("cart-toggle").onclick=()=>{
+ document.getElementById("cart").classList.toggle("open");
+};
 
 function searchProducts(){
  let term=document.getElementById("search-input").value.toLowerCase();
@@ -188,7 +271,7 @@ function filterCategory(cat){
 <!-- GTM noscript -->
 <noscript>
 <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MW796FBX"
-height="0" width="0" style="display:none;visibility:hidden"></iframe>
+height="0" width="0" style="display:none;"></iframe>
 </noscript>
 
 </body>
